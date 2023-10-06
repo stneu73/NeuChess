@@ -20,15 +20,16 @@ public class TestFactory {
     }
 
     public static ChessPiece getNewPiece(ChessGame.TeamColor pieceColor, ChessPiece.PieceType type){
+        ChessPiece retval = null;
         switch(type) {
-            case ROOK -> new Rook(pieceColor);
-            case PAWN -> new Pawn(pieceColor);
-            case KING -> new King(pieceColor);
-            case QUEEN -> new Queen(pieceColor);
-            case BISHOP -> new Bishop(pieceColor);
-            case KNIGHT -> new Knight(pieceColor);
+            case ROOK -> retval = new Rook(pieceColor);
+            case PAWN -> retval = new Pawn(pieceColor);
+            case KING -> retval = new King(pieceColor);
+            case QUEEN -> retval = new Queen(pieceColor);
+            case BISHOP -> retval = new Bishop(pieceColor);
+            case KNIGHT -> retval = new Knight(pieceColor);
         }
-		return null;
+		return retval;
     }
 
     public static ChessPosition getNewPosition(Integer row, Integer col){
