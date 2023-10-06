@@ -20,7 +20,14 @@ public class TestFactory {
     }
 
     public static ChessPiece getNewPiece(ChessGame.TeamColor pieceColor, ChessPiece.PieceType type){
-        // FIXME
+        switch(type) {
+            case ROOK -> new Rook(pieceColor);
+            case PAWN -> new Pawn(pieceColor);
+            case KING -> new King(pieceColor);
+            case QUEEN -> new Queen(pieceColor);
+            case BISHOP -> new Bishop(pieceColor);
+            case KNIGHT -> new Knight(pieceColor);
+        }
 		return null;
     }
 
