@@ -2,6 +2,9 @@ package chess;
 
 public class Board implements ChessBoard {
     ChessPiece[][] piecesOnBoard;
+    public Board() {
+
+    }
     @Override
     public void addPiece(ChessPosition position, ChessPiece piece) {
         piecesOnBoard[position.getRow()][position.getColumn()] = piece;
@@ -17,7 +20,8 @@ public class Board implements ChessBoard {
         //black team
         ChessGame.TeamColor black = ChessGame.TeamColor.BLACK;
         for (int i = 0; i < 8; i++) {
-            piecesOnBoard[i][1] = new Pawn(black);
+            addPiece(new Position(i,1), new Pawn(black));
+            //piecesOnBoard[i][1] = new Pawn(black);
         }
         piecesOnBoard[0][0] = new Rook(black);
         piecesOnBoard[1][0] = new Knight(black);
