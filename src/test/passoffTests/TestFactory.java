@@ -11,8 +11,7 @@ public class TestFactory {
     //Chess Functions
     //------------------------------------------------------------------------------------------------------------------
     public static ChessBoard getNewBoard(){
-        // FIXME
-		return null;
+        return new Board();
     }
 
     public static ChessGame getNewGame(){
