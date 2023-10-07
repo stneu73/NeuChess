@@ -1,12 +1,14 @@
 package chess;
 
 import java.util.Collection;
+import java.util.HashSet;
 
 public class Queen implements ChessPiece{
     private ChessGame.TeamColor color;
     private Collection<ChessMove> moves;
     public Queen(ChessGame.TeamColor color) {
         this.color = color;
+        this.moves = new HashSet<>();
     }
     @Override
     public ChessGame.TeamColor getTeamColor() {
@@ -25,10 +27,10 @@ public class Queen implements ChessPiece{
         //Bishop Logic
         if (y < 7) {
             //NorthWest
-            if (x < 7) {
+            if (x > 0) {
                 int yT = y;
                 int xT = x;
-                for (int i = 0; i < 8; i++, xT--,yT++) {
+                for (int i = 0; i < 8; i++, xT--, yT++) {
                     if (xT < 0 || yT > 7) break;
                     ChessPosition currPosition = new Position(xT,yT,true);
                     if (board.getPiece(currPosition) != this) {
@@ -48,7 +50,7 @@ public class Queen implements ChessPiece{
                 }
             }
             //NorthEast
-            if (x > 0) {
+            if (x < 7) {
                 int yT = y;
                 int xT = x;
                 for (int i = 0; i < 8; i++, xT++,yT++) {
@@ -96,7 +98,7 @@ public class Queen implements ChessPiece{
                 }
             }
             //SouthWest
-            if (x > 0 ) {
+            if (x > 0) {
                 int yT = y;
                 int xT = x;
                 for (int i = 0; i < 8; i++, xT--,yT--) {
@@ -119,6 +121,7 @@ public class Queen implements ChessPiece{
                 }
             }
         }
+        //Rook Logic
         //left
         if (x > 0) {
             for (int i = x; i >= 0; i--) {
@@ -140,7 +143,6 @@ public class Queen implements ChessPiece{
                 }
             }
         }
-        //Rook Logic
         //right
         if (x < 7) {
             for (int i = x; i < 8; i++) {
