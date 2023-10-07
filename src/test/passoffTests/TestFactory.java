@@ -33,13 +33,11 @@ public class TestFactory {
     }
 
     public static ChessPosition getNewPosition(Integer row, Integer col){
-        // FIXME
-		return null;
+        return new Position(row,col);
     }
 
     public static ChessMove getNewMove(ChessPosition startPosition, ChessPosition endPosition, ChessPiece.PieceType promotionPiece){
-        // FIXME
-		return null;
+        return new Move(startPosition,endPosition,promotionPiece);
     }
     //------------------------------------------------------------------------------------------------------------------
 

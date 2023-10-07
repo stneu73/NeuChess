@@ -1,10 +1,77 @@
 package chess;
 
 import java.util.Collection;
+import java.util.Iterator;
 
 public class Rook implements ChessPiece{
     private ChessGame.TeamColor color;
-    private Collection<ChessMove> moves;
+    private Collection<ChessMove> moves = new Collection<ChessMove>() {
+        @Override
+        public int size() {
+            return 0;
+        }
+
+        @Override
+        public boolean isEmpty() {
+            return false;
+        }
+
+        @Override
+        public boolean contains(Object o) {
+            return false;
+        }
+
+        @Override
+        public Iterator<ChessMove> iterator() {
+            return null;
+        }
+
+        @Override
+        public Object[] toArray() {
+            return new Object[0];
+        }
+
+        @Override
+        public <T> T[] toArray(T[] a) {
+            return null;
+        }
+
+        @Override
+        public boolean add(ChessMove chessMove) {
+            return false;
+        }
+
+        @Override
+        public boolean remove(Object o) {
+            return false;
+        }
+
+        @Override
+        public boolean containsAll(Collection<?> c) {
+            return false;
+        }
+
+        @Override
+        public boolean addAll(Collection<? extends ChessMove> c) {
+            return false;
+        }
+
+        @Override
+        public boolean removeAll(Collection<?> c) {
+            return false;
+        }
+
+        @Override
+        public boolean retainAll(Collection<?> c) {
+            return false;
+        }
+
+        @Override
+        public void clear() {
+
+        }
+    };
+
     public Rook(ChessGame.TeamColor color) {
         this.color = color;
     }
@@ -43,7 +110,7 @@ public class Rook implements ChessPiece{
             }
         }
         //right
-        for (int i = x; i < 8; i++) {
+        for (int i = x; i < 7; i++) {
             moves.add(new Move(myPosition,new Position(y,i)));
         }
         //up
@@ -51,7 +118,7 @@ public class Rook implements ChessPiece{
             moves.add(new Move(myPosition,new Position(i,x)));
         }
         //down
-        for (int i = y; i < 0; i++) {
+        for (int i = y; i < 7; i++) {
             moves.add(new Move(myPosition,new Position(i,x)));
         }
         return this.moves;
