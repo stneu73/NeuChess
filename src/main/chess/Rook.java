@@ -87,8 +87,8 @@ public class Rook implements ChessPiece{
 
     @Override
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
-        int x = myPosition.getColumn();
-        int y = myPosition.getRow();
+        int x = myPosition.getColumnIndex();
+        int y = myPosition.getRowIndex();
         boolean hitAnotherPiece = false;
         //left
         for (int i = x; i > 0; i--) {

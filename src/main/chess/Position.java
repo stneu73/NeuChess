@@ -9,11 +9,18 @@ public class Position implements ChessPosition{
     }
     @Override
     public int getRow() {
-        return row;
+        return row+1;
     }
 
     @Override
     public int getColumn() {
+        return column+1;
+    }
+
+    public int getRowIndex() {
+        return row;
+    }
+    public int getColumnIndex() {
         return column;
     }
 }

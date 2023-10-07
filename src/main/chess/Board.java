@@ -11,12 +11,12 @@ public class Board implements ChessBoard {
 //    }
     @Override
     public void addPiece(ChessPosition position, ChessPiece piece) {
-        piecesOnBoard[position.getRow()][position.getColumn()] = piece;
+        piecesOnBoard[position.getRowIndex()][position.getColumnIndex()] = piece;
     }
 
     @Override
     public ChessPiece getPiece(ChessPosition position) {
-        return piecesOnBoard[position.getRow()][position.getColumn()];
+        return piecesOnBoard[position.getRowIndex()][position.getColumnIndex()];
     }
 
     @Override

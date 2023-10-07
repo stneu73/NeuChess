@@ -18,4 +18,8 @@ public interface ChessPosition {
      *         1 codes for the left row
      */
     int getColumn();
+
+    int getColumnIndex();
+
+    int getRowIndex();
 }
