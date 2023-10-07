@@ -534,6 +534,7 @@ public class ChessGameTests {
         //set up game
         game = TestFactory.getNewGame();
         game.setBoard(board);
+        game.setTeamTurn(ChessGame.TeamColor.BLACK);
 
         Assertions.assertTrue(game.isInCheck(ChessGame.TeamColor.BLACK),
                 "Black is in check but isInCheck returned false");
@@ -579,6 +580,7 @@ public class ChessGameTests {
         //set up game
         game = TestFactory.getNewGame();
         game.setBoard(board);
+        game.setTeamTurn(ChessGame.TeamColor.WHITE);
 
         Assertions.assertTrue(game.isInCheckmate(ChessGame.TeamColor.WHITE),
                 "White is in checkmate but isInCheckmate returned false");
@@ -625,6 +627,7 @@ public class ChessGameTests {
         //set up game
         game = TestFactory.getNewGame();
         game.setBoard(board);
+        game.setTeamTurn(ChessGame.TeamColor.BLACK);
 
         Assertions.assertTrue(game.isInCheckmate(ChessGame.TeamColor.BLACK),
                 "Black is in checkmate but isInCheckmate returned false");

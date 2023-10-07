@@ -23,9 +23,11 @@ public class Board implements ChessBoard {
 //        }
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
-                ChessPosition currPosition = new Position(i,j);
+                ChessPosition currPosition = new Position(i,j,true);
+                if (getPiece(currPosition) != null) {
                     if (getPiece(currPosition).getPieceType() == ChessPiece.PieceType.KING && getPiece(currPosition).getTeamColor() == color) {
                         return currPosition;
+                    }
                 }
             }
         }

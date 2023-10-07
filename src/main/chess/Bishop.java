@@ -26,7 +26,7 @@ public class Bishop implements ChessPiece{
 
         if (y < 7) {
             //NorthWest
-            if (x < 7) {
+            if (x > 0) {
                 int yT = y;
                 int xT = x;
                 for (int i = 0; i < 8; i++, xT--,yT++) {
@@ -49,7 +49,7 @@ public class Bishop implements ChessPiece{
                 }
             }
             //NorthEast
-            if (x > 0) {
+            if (x < 7) {
                 int yT = y;
                 int xT = x;
                 for (int i = 0; i < 8; i++, xT++,yT++) {
