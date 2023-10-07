@@ -55,6 +55,8 @@ public interface ChessGame {
      */
     boolean isInCheck(TeamColor teamColor);
 
+    boolean positionCanBeAttacked(TeamColor teamColor, ChessPosition currPosition);
+
     /**
      * Determines if the given team is in checkmate
      *

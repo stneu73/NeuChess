@@ -25,6 +25,8 @@ public interface ChessBoard {
      */
     ChessPiece getPiece(ChessPosition position);
 
+    ChessPosition getKingPosition(ChessGame.TeamColor color);
+
     /**
      * Sets the board to the default starting board
      * (How the game of chess normally starts)

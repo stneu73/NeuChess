@@ -1,7 +1,7 @@
 package chess;
 
 public class Board implements ChessBoard {
-    ChessPiece[][] piecesOnBoard = new ChessPiece[8][8];
+    private ChessPiece[][] piecesOnBoard = new ChessPiece[8][8];
 
     @Override
     public void addPiece(ChessPosition position, ChessPiece piece) {
@@ -11,6 +11,25 @@ public class Board implements ChessBoard {
     @Override
     public ChessPiece getPiece(ChessPosition position) {
         return piecesOnBoard[position.getColumnIndex()][position.getRowIndex()];
+    }
+
+    public ChessPosition getKingPosition(ChessGame.TeamColor color) {
+//        for (ChessPiece[] itr:piecesOnBoard) {
+//            for (ChessPiece itr2:itr) {
+//                if (itr2.getPieceType() == ChessPiece.PieceType.KING && itr2.getTeamColor() == color) {
+//                    return itr2;
+//                }
+//            }
+//        }
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                ChessPosition currPosition = new Position(i,j);
+                    if (getPiece(currPosition).getPieceType() == ChessPiece.PieceType.KING && getPiece(currPosition).getTeamColor() == color) {
+                        return currPosition;
+                }
+            }
+        }
+        return null;
     }
 
     @Override
