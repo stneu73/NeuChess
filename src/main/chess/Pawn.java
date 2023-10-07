@@ -6,10 +6,8 @@ import java.util.Iterator;
 public class Pawn implements ChessPiece{
     private ChessGame.TeamColor color;
     private Collection<ChessMove> moves;
-    private boolean moved;
     public Pawn(ChessGame.TeamColor color) {
         this.color = color;
-        moved = false;
         moves = new Collection<ChessMove>() {
             @Override
             public int size() {
