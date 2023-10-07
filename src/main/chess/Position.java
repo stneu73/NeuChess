@@ -3,9 +3,15 @@ package chess;
 public class Position implements ChessPosition{
     int row;
     int column;
-    public Position(int row, int column) {
+    public Position(int column,int row) {
         this.row = row-1;
         this.column = column-1;
+    }
+    public Position(int column,int row,boolean indexZero) {
+        if (indexZero) {
+            this.row = row;
+            this.column = column;
+        }
     }
     @Override
     public int getRow() {

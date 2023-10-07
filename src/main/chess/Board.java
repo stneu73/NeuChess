@@ -2,21 +2,15 @@ package chess;
 
 public class Board implements ChessBoard {
     ChessPiece[][] piecesOnBoard = new ChessPiece[8][8];
-//    public Board() {
-//        for (int i = 0; i < 8; i++) {
-//            for (int j = 0; j < 8; j++) {
-//                piecesOnBoard[j][i] = null;
-//            }
-//        }
-//    }
+
     @Override
     public void addPiece(ChessPosition position, ChessPiece piece) {
-        piecesOnBoard[position.getRowIndex()][position.getColumnIndex()] = piece;
+        piecesOnBoard[position.getColumnIndex()][position.getRowIndex()] = piece;
     }
 
     @Override
     public ChessPiece getPiece(ChessPosition position) {
-        return piecesOnBoard[position.getRowIndex()][position.getColumnIndex()];
+        return piecesOnBoard[position.getColumnIndex()][position.getRowIndex()];
     }
 
     @Override
