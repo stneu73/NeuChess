@@ -58,13 +58,13 @@ public class Game implements ChessGame{
         setTeamTurn(getOtherTeam());
     }
     private Collection<ChessMove> getAllTeamMoves(TeamColor color) {
-        allTeamMoves = new HashSet<>();
+        this.allTeamMoves = new HashSet<>();
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
                 ChessPosition currPosition = new Position(i,j,true);
                 if (getBoard().getPiece(currPosition) != null) {
                     if (getBoard().getPiece(currPosition).getTeamColor() == color) {
-                        allTeamMoves.addAll(validMoves(currPosition));
+                        this.allTeamMoves.addAll(validMoves(currPosition));
                     }
                 }
             }
@@ -91,7 +91,6 @@ public class Game implements ChessGame{
     @Override
     public boolean isInCheckmate(TeamColor teamColor) {
         if (isInCheck(teamColor)) {
-
             int sum = 0;
             var val = validMoves(getBoard().getKingPosition(teamColor));
             for (var itr:val) {

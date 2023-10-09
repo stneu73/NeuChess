@@ -73,8 +73,22 @@ public class Board implements ChessBoard {
     public void executeMove(ChessMove move) {
         ChessPosition startPosition = move.getStartPosition();
         ChessPosition endPosition = move.getEndPosition();
-
-        this.piecesOnBoard[endPosition.getColumnIndex()][endPosition.getRowIndex()] = this.piecesOnBoard[startPosition.getColumnIndex()][startPosition.getRowIndex()];
+        if (move.getPromotionPiece() != null) {
+            ChessGame.TeamColor pieceColor = this.piecesOnBoard[startPosition.getColumnIndex()][startPosition.getRowIndex()].getTeamColor();
+            ChessPiece piece = null;
+            switch(move.getPromotionPiece()) {
+                case ROOK -> piece = new Rook(pieceColor);
+                case PAWN -> piece = new Pawn(pieceColor);
+                case KING -> piece = new King(pieceColor);
+                case QUEEN -> piece = new Queen(pieceColor);
+                case BISHOP -> piece = new Bishop(pieceColor);
+                case KNIGHT -> piece = new Knight(pieceColor);
+            };
+            this.piecesOnBoard[endPosition.getColumnIndex()][endPosition.getRowIndex()] = piece;
+        }
+        else {
+            this.piecesOnBoard[endPosition.getColumnIndex()][endPosition.getRowIndex()] = this.piecesOnBoard[startPosition.getColumnIndex()][startPosition.getRowIndex()];
+        }
         deletePiece(startPosition);
     }
 }
