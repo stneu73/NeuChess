@@ -24,6 +24,7 @@ public class King implements ChessPiece{
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
         int x = myPosition.getColumnIndex();
         int y = myPosition.getRowIndex();
+        moves.clear();
         ChessPosition currPosition = new Position(x,y+1,true);
         //North
         if (y + 1 < 8) {

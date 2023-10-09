@@ -25,6 +25,7 @@ public class Pawn implements ChessPiece{
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
         int x = myPosition.getColumnIndex();
         int y = myPosition.getRowIndex();
+        moves.clear();
         ChessPosition currPosition = null;
         //northward (white)
         if (this.color == ChessGame.TeamColor.WHITE) {

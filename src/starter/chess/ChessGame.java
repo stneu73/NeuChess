@@ -55,6 +55,8 @@ public interface ChessGame {
      */
     boolean isInCheck(TeamColor teamColor);
 
+//    Collection<ChessMove> inCheckValidMoves();
+
     boolean positionCanBeAttacked(TeamColor teamColor, ChessPosition currPosition);
 
     /**

@@ -844,11 +844,12 @@ public class ChessGameTests {
                     TestFactory.getNewPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.KING));
 
             game.setBoard(board);
+            game.setTeamTurn(ChessGame.TeamColor.BLACK);
 
             //knight valid moves
             validMoves.add(TestFactory.getNewMove(knightPosition,
                     TestFactory.getNewPosition(3, 5), null));  //defend king
-            validMoves.add(TestFactory.getNewMove(knightPosition, 
+            validMoves.add(TestFactory.getNewMove(knightPosition,
                     TestFactory.getNewPosition(6, 2), null)); //capture bishop
 
             Set<ChessMove> gameMoves = new HashSet<>(game.validMoves(knightPosition));

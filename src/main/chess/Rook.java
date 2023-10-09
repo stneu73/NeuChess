@@ -25,6 +25,7 @@ public class Rook implements ChessPiece{
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
         int x = myPosition.getColumnIndex();
         int y = myPosition.getRowIndex();
+        moves.clear();
         //left
         if (x > 0) {
             for (int i = x; i >= 0; i--) {

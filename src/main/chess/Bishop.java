@@ -23,6 +23,7 @@ public class Bishop implements ChessPiece{
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
         int x = myPosition.getColumnIndex();
         int y = myPosition.getRowIndex();
+        moves.clear();
 
         if (y < 7) {
             //NorthWest
@@ -35,7 +36,8 @@ public class Bishop implements ChessPiece{
                     if (board.getPiece(currPosition) != this) {
                         if (board.getPiece(currPosition) == null) {
                             moves.add(new Move(myPosition, currPosition));
-                        } else {
+                        }
+                        else {
                             ChessPiece piece = board.getPiece(currPosition);
                             if (piece.getTeamColor() == this.color) {
                                 break;

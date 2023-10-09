@@ -24,6 +24,7 @@ public class Queen implements ChessPiece{
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
         int x = myPosition.getColumnIndex();
         int y = myPosition.getRowIndex();
+        moves.clear();
         //Bishop Logic
         if (y < 7) {
             //NorthWest
