@@ -4,13 +4,15 @@ import java.util.Collection;
 import java.util.HashSet;
 
 public class Game implements ChessGame{
-    TeamColor teamTurn;
-    Collection<ChessMove> allTeamMoves;
-    ChessBoard board;
+    private TeamColor teamTurn;
+    private Collection<ChessMove> allTeamMoves;
+    private ChessBoard board;
+    private ChessBoard hypotheticalBoard;
     public Game (){
         this.teamTurn = TeamColor.WHITE;
         this.allTeamMoves = new HashSet<>();
         this.board = new Board();
+        this.hypotheticalBoard = new Board();
     }
     @Override
     public TeamColor getTeamTurn() {
@@ -36,10 +38,27 @@ public class Game implements ChessGame{
 
     @Override
     public void makeMove(ChessMove move) throws InvalidMoveException {
-
+        setHypotheticalBoardAsBoard();
+        if (getHypotheticalBoard().getPiece(move.getStartPosition()).getTeamColor() != getTeamTurn()) throw new InvalidMoveException();
+        if (move.getPromotionPiece() != null && getBoard().getPiece(move.getStartPosition()).getPieceType() != ChessPiece.PieceType.PAWN) { throw new InvalidMoveException(); }
+        boolean validMove = false;
+        for (var itr:validMoves(move.getStartPosition())) {
+            if (move.getEndPosition().equals(itr.getEndPosition())) {
+                validMove = true;
+                break;
+            }
+        }
+        if (!validMove) throw new InvalidMoveException();
+        getHypotheticalBoard().executeMove(move);
+        if (isInCheck(getTeamTurn())) {
+            throw new InvalidMoveException();
+        }
+        getBoard().executeMove(move);
+        setHypotheticalBoardAsBoard();
+        setTeamTurn(getOtherTeam());
     }
     private Collection<ChessMove> getAllTeamMoves(TeamColor color) {
-
+        allTeamMoves = new HashSet<>();
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
                 ChessPosition currPosition = new Position(i,j,true);
@@ -55,23 +74,32 @@ public class Game implements ChessGame{
 
     @Override
     public boolean isInCheck(TeamColor teamColor) {
-        return positionCanBeAttacked(teamColor,getBoard().getKingPosition(teamColor));
+        return positionCanBeAttacked(teamColor,getHypotheticalBoard().getKingPosition(teamColor));
     }
 
     public boolean positionCanBeAttacked(TeamColor teamColor, ChessPosition currPosition) {
-        for (var itr: getAllTeamMoves(getOtherTeam())) {
-            if (itr.getEndPosition().getColumnIndex() == currPosition.getColumnIndex() && itr.getEndPosition().getRowIndex() == currPosition.getRowIndex()) {
+        allTeamMoves = new HashSet<>();
+        for (var itr:getAllTeamMoves(getOtherTeam())) {
+            if (itr.getEndPosition().equals(currPosition)) {
                     return true;
             }
         }
         return false;
     }
+
+//    public boolean validKingMove(TeamColor teamColor, )
     @Override
     public boolean isInCheckmate(TeamColor teamColor) {
         if (isInCheck(teamColor)) {
-            for (var itr:validMoves(getBoard().getKingPosition(teamColor))) {
-                if (!positionCanBeAttacked(teamColor, itr.getEndPosition())) break;
+
+            int sum = 0;
+            var val = validMoves(getBoard().getKingPosition(teamColor));
+            for (var itr:val) {
+                if (positionCanBeAttacked(teamColor, itr.getEndPosition())) {
+                    sum += 1;
+                }
             }
+            return validMoves(getBoard().getKingPosition(teamColor)).size() == sum;
         }
         return false;
     }
@@ -79,6 +107,9 @@ public class Game implements ChessGame{
     @Override
     public boolean isInStalemate(TeamColor teamColor) {
 
+        if (getAllTeamMoves(teamColor).isEmpty()) {
+            return true;
+        }
         return false;
     }
 
@@ -90,5 +121,15 @@ public class Game implements ChessGame{
     @Override
     public ChessBoard getBoard() {
         return this.board;
+    }
+    public ChessBoard getHypotheticalBoard() { return this.hypotheticalBoard; }
+    public ChessBoard setHypotheticalBoardAsBoard() {
+        hypotheticalBoard = new Board();
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                getHypotheticalBoard().getPiecesOnBoard()[i][j] = getBoard().getPiecesOnBoard()[i][j];
+            }
+        }
+        return this.hypotheticalBoard;
     }
 }

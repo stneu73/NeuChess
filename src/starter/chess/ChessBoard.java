@@ -24,6 +24,7 @@ public interface ChessBoard {
      *         position
      */
     ChessPiece getPiece(ChessPosition position);
+    ChessPiece[][] getPiecesOnBoard();
 
     ChessPosition getKingPosition(ChessGame.TeamColor color);
 
@@ -32,4 +33,6 @@ public interface ChessBoard {
      * (How the game of chess normally starts)
      */
     void resetBoard();
+
+    void executeMove(ChessMove move);
 }

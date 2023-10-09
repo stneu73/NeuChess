@@ -87,4 +87,6 @@ public interface ChessGame {
      * @return the chessboard
      */
     ChessBoard getBoard();
+    ChessBoard getHypotheticalBoard();
+    ChessBoard setHypotheticalBoardAsBoard();
 }

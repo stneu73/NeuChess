@@ -5,22 +5,19 @@ public class Board implements ChessBoard {
 
     @Override
     public void addPiece(ChessPosition position, ChessPiece piece) {
-        piecesOnBoard[position.getColumnIndex()][position.getRowIndex()] = piece;
+        this.piecesOnBoard[position.getColumnIndex()][position.getRowIndex()] = piece;
     }
 
     @Override
     public ChessPiece getPiece(ChessPosition position) {
-        return piecesOnBoard[position.getColumnIndex()][position.getRowIndex()];
+        return this.piecesOnBoard[position.getColumnIndex()][position.getRowIndex()];
+    }
+
+    public ChessPiece[][] getPiecesOnBoard() {
+        return piecesOnBoard;
     }
 
     public ChessPosition getKingPosition(ChessGame.TeamColor color) {
-//        for (ChessPiece[] itr:piecesOnBoard) {
-//            for (ChessPiece itr2:itr) {
-//                if (itr2.getPieceType() == ChessPiece.PieceType.KING && itr2.getTeamColor() == color) {
-//                    return itr2;
-//                }
-//            }
-//        }
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
                 ChessPosition currPosition = new Position(i,j,true);
@@ -66,8 +63,18 @@ public class Board implements ChessBoard {
         //null for all empty spaces
         for (int i = 2; i < 5;i++){
             for (int j = 0; j < 8; j++) {
-                piecesOnBoard[j][i] = null;
+                this.piecesOnBoard[j][i] = null;
             }
         }
+    }
+    public void deletePiece(ChessPosition positionToDelete) {
+        this.piecesOnBoard[positionToDelete.getColumnIndex()][positionToDelete.getRowIndex()] = null;
+    }
+    public void executeMove(ChessMove move) {
+        ChessPosition startPosition = move.getStartPosition();
+        ChessPosition endPosition = move.getEndPosition();
+
+        this.piecesOnBoard[endPosition.getColumnIndex()][endPosition.getRowIndex()] = this.piecesOnBoard[startPosition.getColumnIndex()][startPosition.getRowIndex()];
+        deletePiece(startPosition);
     }
 }
