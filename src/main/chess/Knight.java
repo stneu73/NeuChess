@@ -25,7 +25,8 @@ public class Knight implements ChessPiece{
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
         int x = myPosition.getColumnIndex();
         int y = myPosition.getRowIndex();
-        moves.clear();
+//        moves.clear();
+        Collection<ChessMove> moves = new HashSet<>();
         ChessPosition currPosition;
         if (x + 2 < 8) {
             if (y + 1 < 8) {

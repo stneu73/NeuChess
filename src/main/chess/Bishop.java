@@ -5,7 +5,7 @@ import java.util.HashSet;
 
 public class Bishop implements ChessPiece{
     private ChessGame.TeamColor color;
-    private Collection<ChessMove> moves = new HashSet<>();
+//    private Collection<ChessMove> moves = new HashSet<>();
     public Bishop(ChessGame.TeamColor color) {
         this.color = color;
     }
@@ -23,7 +23,7 @@ public class Bishop implements ChessPiece{
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
         int x = myPosition.getColumnIndex();
         int y = myPosition.getRowIndex();
-        moves.clear();
+        Collection<ChessMove> moves = new HashSet<>(); //.clear();
 
         if (y < 7) {
             //NorthWest
@@ -122,6 +122,6 @@ public class Bishop implements ChessPiece{
                 }
             }
         }
-        return this.moves;
+        return moves;
     }
 }

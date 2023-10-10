@@ -40,7 +40,7 @@ public class Game implements ChessGame{
                 hyp.getPiecesOnBoard()[i][j] = getBoard().getPiecesOnBoard()[i][j];
             }
         }
-        for (var itr:getBoard().getPiece(startPosition).pieceMoves(hyp,startPosition)) {
+        for (var itr:getBoard().getPiece(startPosition).pieceMoves(getBoard(),startPosition)) {
             hyp = new Board();
             for (int i = 0; i < 8; i++) {
                 for (int j = 0; j < 8; j++) {
@@ -51,18 +51,16 @@ public class Game implements ChessGame{
             if (!isInHypotheticalCheck(getTeamTurn(),hyp)) {
                 moves.add(itr);
             }
-
         }
-        setHypotheticalBoardAsBoard();
+//        setHypotheticalBoardAsBoard();
         return moves;
-
     }
 
     @Override
     public void makeMove(ChessMove move) throws InvalidMoveException {
         setHypotheticalBoardAsBoard();
-        if (getHypotheticalBoard().getPiece(move.getStartPosition()).getTeamColor() != getTeamTurn()) throw new InvalidMoveException();
-        if (move.getPromotionPiece() != null && getBoard().getPiece(move.getStartPosition()).getPieceType() != ChessPiece.PieceType.PAWN) { throw new InvalidMoveException(); }
+        if (getHypotheticalBoard().getPiece(move.getStartPosition()).getTeamColor() != getTeamTurn()) throw new InvalidMoveException("not right team");
+        if (move.getPromotionPiece() != null && getBoard().getPiece(move.getStartPosition()).getPieceType() != ChessPiece.PieceType.PAWN) { throw new InvalidMoveException("promotes non pawn piece"); }
         boolean validMove = false;
         for (var itr:validMoves(move.getStartPosition())) {
             if (move.getEndPosition().equals(itr.getEndPosition())) {
@@ -70,10 +68,10 @@ public class Game implements ChessGame{
                 break;
             }
         }
-        if (!validMove) throw new InvalidMoveException();
+        if (!validMove) throw new InvalidMoveException("not a valid move");
         getHypotheticalBoard().executeMove(move);
-        if (isInCheck(getTeamTurn())) {
-            throw new InvalidMoveException();
+        if (isInHypotheticalCheck(getTeamTurn(),hypotheticalBoard)) {
+            throw new InvalidMoveException("king is in check");
         }
         getBoard().executeMove(move);
         setHypotheticalBoardAsBoard();
@@ -126,7 +124,7 @@ public class Game implements ChessGame{
 
     @Override
     public boolean isInCheck(TeamColor teamColor) {
-        return positionCanBeAttacked(teamColor,getHypotheticalBoard().getKingPosition(teamColor));
+        return positionCanBeAttacked(teamColor,getBoard().getKingPosition(teamColor));
     }
 
     public boolean isInHypotheticalCheck(TeamColor teamColor, ChessBoard hypBoard) {
