@@ -5,10 +5,9 @@ import java.util.HashSet;
 
 public class Pawn implements ChessPiece{
     private ChessGame.TeamColor color;
-    private Collection<ChessMove> moves;
+//    private Collection<ChessMove> moves;
     public Pawn(ChessGame.TeamColor color) {
         this.color = color;
-        moves = new HashSet<>();
     }
 
     @Override
@@ -36,7 +35,7 @@ public class Pawn implements ChessPiece{
                     moves.add(new Move(myPosition, currPosition));
                 }
                 if (y + 1 == 7) {
-                    promotionMoves(myPosition,currPosition);
+                    promotionMoves(myPosition,currPosition,moves);
                 }
                 if (y == 1) {
                     currPosition = new Position(x, y + 2, true);
@@ -45,7 +44,7 @@ public class Pawn implements ChessPiece{
                     }
                 }
             }
-            if (x + 1 < 8 && y + 1 < 8 && x - 1 > 0) {
+            if (x + 1 < 8 && y + 1 < 8 && x - 1 > -1) {
                 currPosition = new Position(x + 1, y + 1, true);
                 if (board.getPiece(currPosition) != null) {
                     if (board.getPiece(currPosition).getTeamColor() != this.color) {
@@ -53,7 +52,7 @@ public class Pawn implements ChessPiece{
                             moves.add(new Move(myPosition, currPosition));
                         }
                         if (y + 1 == 7) {
-                            promotionMoves(myPosition,currPosition);
+                            promotionMoves(myPosition,currPosition,moves);
                         }
                     }
                 }
@@ -64,7 +63,7 @@ public class Pawn implements ChessPiece{
                             moves.add(new Move(myPosition, currPosition));
                         }
                         if (y + 1 == 7) {
-                            promotionMoves(myPosition,currPosition);
+                            promotionMoves(myPosition,currPosition,moves);
                         }
                     }
                 }
@@ -78,7 +77,7 @@ public class Pawn implements ChessPiece{
                     moves.add(new Move(myPosition, currPosition));
                 }
                 if (y - 1 == 0) {
-                    promotionMoves(myPosition,currPosition);
+                    promotionMoves(myPosition,currPosition,moves);
                 }
                 if (y == 6) {
                     currPosition = new Position(x, y - 2, true);
@@ -95,7 +94,7 @@ public class Pawn implements ChessPiece{
                             moves.add(new Move(myPosition, currPosition));
                         }
                         if (y - 1 == 0) {
-                            promotionMoves(myPosition,currPosition);
+                            promotionMoves(myPosition,currPosition,moves);
                         }
                     }
                 }
@@ -106,7 +105,7 @@ public class Pawn implements ChessPiece{
                             moves.add(new Move(myPosition, currPosition));
                         }
                         if (y - 1 == 0) {
-                            promotionMoves(myPosition,currPosition);
+                            promotionMoves(myPosition,currPosition,moves);
                         }
                     }
                 }
@@ -115,7 +114,7 @@ public class Pawn implements ChessPiece{
         return moves;
     }
 
-    private void promotionMoves(ChessPosition myPosition, ChessPosition currPosition) {
+    private void promotionMoves(ChessPosition myPosition, ChessPosition currPosition, Collection<ChessMove> moves) {
         moves.add(new Move(myPosition, currPosition, PieceType.QUEEN));
         moves.add(new Move(myPosition, currPosition, PieceType.BISHOP));
         moves.add(new Move(myPosition, currPosition, PieceType.ROOK));

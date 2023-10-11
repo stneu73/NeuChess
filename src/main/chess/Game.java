@@ -34,22 +34,31 @@ public class Game implements ChessGame{
     @Override
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
         Collection<ChessMove> moves = new HashSet<>();
-        ChessBoard hyp = new Board();
-        for (int i = 0; i < 8; i++) {
-            for (int j = 0; j < 8; j++) {
-                hyp.getPiecesOnBoard()[i][j] = getBoard().getPiecesOnBoard()[i][j];
-            }
-        }
+//        ChessBoard hyp = new Board();
+//        for (int i = 0; i < 8; i++) {
+//            for (int j = 0; j < 8; j++) {
+//                hyp.getPiecesOnBoard()[i][j] = getBoard().getPiecesOnBoard()[i][j];
+//            }
+//        }
+        int sum = 0;
+        TeamColor color = getBoard().getPiece(startPosition).getTeamColor();
         for (var itr:getBoard().getPiece(startPosition).pieceMoves(getBoard(),startPosition)) {
-            hyp = new Board();
-            for (int i = 0; i < 8; i++) {
-                for (int j = 0; j < 8; j++) {
-                    hyp.getPiecesOnBoard()[i][j] = getBoard().getPiecesOnBoard()[i][j];
-                }
-            }
+//            hyp = new Board();
+//
+//            for (int i = 0; i < 8; i++) {
+//                for (int j = 0; j < 8; j++) {
+//                    hyp.getPiecesOnBoard()[i][j] = getBoard().getPiecesOnBoard()[i][j];
+//                }
+//            }
+//            hyp.executeMove(itr);
+            ChessBoard hyp = setHypotheticalBoardAsBoard();
             hyp.executeMove(itr);
-            if (!isInHypotheticalCheck(getTeamTurn(),hyp)) {
+            if (!isInHypotheticalCheck(color, hyp)) {
                 moves.add(itr);
+            }
+            if (getBoard().getPiece(startPosition).getPieceType() == ChessPiece.PieceType.KING) {
+                sum += 1;
+                if (sum == 8) break;
             }
         }
 //        setHypotheticalBoardAsBoard();
@@ -63,11 +72,12 @@ public class Game implements ChessGame{
         if (move.getPromotionPiece() != null && getBoard().getPiece(move.getStartPosition()).getPieceType() != ChessPiece.PieceType.PAWN) { throw new InvalidMoveException("promotes non pawn piece"); }
         boolean validMove = false;
         for (var itr:validMoves(move.getStartPosition())) {
-            if (move.getEndPosition().equals(itr.getEndPosition())) {
+            if (move.equals(itr)) {
                 validMove = true;
                 break;
             }
         }
+        setHypotheticalBoardAsBoard();
         if (!validMove) throw new InvalidMoveException("not a valid move");
         getHypotheticalBoard().executeMove(move);
         if (isInHypotheticalCheck(getTeamTurn(),hypotheticalBoard)) {
@@ -144,7 +154,13 @@ public class Game implements ChessGame{
 
     public boolean positionCanBeAttacked(TeamColor teamColor, ChessPosition currPosition) {
 //        allTeamMoves = new HashSet<>();
-        for (var itr:getAllTeamMoves(getOtherTeam())) {
+        if (teamColor == TeamColor.WHITE) {
+            teamColor = TeamColor.BLACK;
+        }
+        else {
+            teamColor = TeamColor.WHITE;
+        }
+        for (var itr:getAllTeamMoves(teamColor)) {
             if (itr.getEndPosition().equals(currPosition)) {
                     return true;
             }
@@ -153,7 +169,14 @@ public class Game implements ChessGame{
     }
     public boolean positionCanBeAttacked(TeamColor teamColor, ChessPosition currPosition, ChessBoard hypBoard) {
 //        allTeamMoves = new HashSet<>();
-        for (var itr:getAllTeamMoves(getOtherTeam(),hypBoard)) {
+        if (teamColor == TeamColor.WHITE) {
+            teamColor = TeamColor.BLACK;
+        }
+        else {
+            teamColor = TeamColor.WHITE;
+        }
+        for (var itr:getAllTeamMoves(teamColor,hypBoard)) {
+//            if (itr)
             if (itr.getEndPosition().equals(currPosition)) {
                 return true;
             }
@@ -164,6 +187,19 @@ public class Game implements ChessGame{
 
     @Override
     public boolean isInCheckmate(TeamColor teamColor) {
+        if (!isInCheck(teamColor)) return false;
+        if (!validMoves(getHypotheticalBoard().getKingPosition(teamColor)).isEmpty()) return false;
+        Collection<ChessMove> theMoves = new HashSet<>();
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8 ; j++) {
+                ChessPosition currPosition = new Position(i,j,true);
+                if (getBoard().getPiece(currPosition) != null && getBoard().getPiece(currPosition).getTeamColor() == teamColor) {
+                    theMoves.addAll(validMoves(currPosition));
+                }
+            }
+        }
+        return theMoves.isEmpty();
+    }
 //        if (isInCheck(teamColor)) {
 //            int sum = 0;
 //            var val = validMoves(getBoard().getKingPosition(teamColor));
@@ -175,12 +211,32 @@ public class Game implements ChessGame{
 //            return validMoves(getBoard().getKingPosition(teamColor)).size() == sum;
 //        }
 //        return false;
-        return isInCheck(getTeamTurn()) && getAllTeamMoves(teamColor).isEmpty();
-    }
+//        return isInCheck(getTeamTurn()) && getAllTeamMoves(teamColor).isEmpty();
+
+//    }
 
     @Override
     public boolean isInStalemate(TeamColor teamColor) {
-        return getAllTeamMoves(teamColor).isEmpty() && !isInCheck(teamColor);
+        if (isInCheck(teamColor)) return false;
+        if (!validMoves(getBoard().getKingPosition(teamColor)).isEmpty()) return false;
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                ChessPosition currPosition = new Position(i,j,true);
+                if (getBoard().getPiece(currPosition) != null && getBoard().getPiece(currPosition).getTeamColor() == teamColor && getBoard().getPiece(currPosition).getPieceType() != ChessPiece.PieceType.KING) {
+                    return false;
+                }
+            }
+        }
+//        Collection<ChessMove> theMoves = new HashSet<>();
+//        for (int i = 0; i < 8; i++) {
+//            for (int j = 0; j < 8 ; j++) {
+//                ChessPosition currPosition = new Position(i,j,true);
+//                if (getBoard().getPiece(currPosition) != null && getBoard().getPiece(currPosition).getTeamColor() == teamColor) {
+//                    theMoves.addAll(validMoves(currPosition));
+//                }
+//            }
+//        }
+        return true;
     }
 
     @Override
