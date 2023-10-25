@@ -9,9 +9,11 @@ import models.User;
 import java.util.Map;
 
 public class MemoryDAO implements DataAcquisition {
+    private static MemoryDAO instance = new MemoryDAO();
     Map<String, User> usernameToUsers;
     Map<Integer, GameModel> gameIDToGameModel;
     Map<String, AuthToken> authStrToAuthToken;
+    public static MemoryDAO getInstance() {return instance;}
     @Override
     public void clearData() throws DataAccessException {
 
