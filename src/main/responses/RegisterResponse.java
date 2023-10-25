@@ -19,4 +19,11 @@ public class RegisterResponse {
      * contains success or error message
      */
     String message;
+
+    public RegisterResponse(String username, String password, String authToken, String message) {
+        this.message = message;
+        this.authToken = authToken;
+        this.password = password;
+        this.username = username;
+    }
 }

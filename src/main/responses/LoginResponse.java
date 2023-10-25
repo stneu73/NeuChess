@@ -15,4 +15,9 @@ public class LoginResponse {
      * contains the authentication token from the database
      */
     String authToken;
+    public LoginResponse(String username, String message, String authToken) {
+        this.username = username;
+        this.message = message;
+        this.authToken = authToken;
+    }
 }

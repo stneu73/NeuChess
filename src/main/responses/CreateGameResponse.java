@@ -18,6 +18,8 @@ public class CreateGameResponse {
      * @param gameID the number of the game made
      */
     public CreateGameResponse(String message, int gameID) {
+        this.gameID = gameID;
+        this.message = message;
 
     }
 

@@ -19,4 +19,11 @@ public class ListGamesResponse {
      * contains a list of all the games from the database
      */
     String[] games;
+
+    public ListGamesResponse(String whiteUsername, String blackUsername, String gameName, String[] games) {
+        this.whiteUsername = whiteUsername;
+        this.blackUsername = blackUsername;
+        this.gameName = gameName;
+        this.games = games;
+    }
 }
