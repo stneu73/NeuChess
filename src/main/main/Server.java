@@ -1,7 +1,9 @@
 package main;
 
 
-import handlers.ClearHandler;
+import handlers.*;
+import requests.CreateGameRequest;
+import requests.LoginRequest;
 import spark.Request;
 import spark.Response;
 import spark.Spark;
@@ -17,26 +19,45 @@ public class Server {
 
         Spark.delete("/db",this::clearDatabase);
         Spark.post("/user", this::registerUser);
-        Spark.post("/session", this::);
-        Spark.delete("/session", this::);
-        Spark.get("/game", this::);
-        Spark.post("/game", this::);
-        Spark.put("/game", this::);
+        Spark.post("/session", this::loginUser);
+        Spark.delete("/session", this::logoutUser);
+        Spark.get("/game", this::listGames);
+        Spark.post("/game", this::createGame);
+        Spark.put("/game", this::joinGame);
 
     }
 
-    private Object clearDatabase(Request req, Response res) {
-        res.type("application/json");
-        return new ClearHandler().ClearHandler(req,res);
+    private Object clearDatabase(Request request, Response response) {
+        response.type("application/json");
+        return new ClearHandler().ClearHandler(request,response);
     }
 
-    private Object registerUser(Request req, Response res) {
-
+    private Object registerUser(Request request, Response response) {
+        response.type("application/json");
+//        Class<LoginRequest> klass = new Class<LoginRequest>;
+        return new RegisterHandler().RegisterHandler(request,response,klass);
     }
 
-    //define endpoints
+    private Object loginUser(Request request, Response response) {
+        response.type("application/json");
+        return new LoginHandler().LoginHandler(request,response,klass);
+    }
 
+    private Object logoutUser(Request request, Response response) {
+        response.type("application/json");
+        return new LogoutHandler().LogoutHandler(request,response);
+    }
 
-    //make calls for each endpoint
-
+    private Object listGames(Request request, Response response) {
+        response.type("application/json");
+        return new ListGamesHandler().ListGamesHandler(request,response);
+    }
+    private Object createGame(Request request, Response response) {
+        response.type("application/json");
+        return new CreateGameHandler().CreateGameHandler(request,response,klass);
+    }
+    private Object joinGame(Request request, Response response) {
+        response.type("application/json");
+        return new JoinGameHandler().JoinGameHandler(request,response,klass);
+    }
 }

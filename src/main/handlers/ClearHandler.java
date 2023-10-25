@@ -10,6 +10,6 @@ public class ClearHandler {
         //pass object to service
         //set status code based on response object
         //res.status(value)
-        return //response object to response json
+        return null;//response object to response json
     }
 }
