@@ -1,14 +1,15 @@
 package handlers;
 
 import com.google.gson.Gson;
+import responses.LogoutResponse;
 import services.LogoutService;
 import spark.Request;
 import spark.Response;
 
 public class LogoutHandler {
     public Object LogoutHandler(Request request, Response response) {
-        var auth = request.headers("Authorization");
-        var result = new LogoutService().logout(auth);
+        String auth = request.headers("Authorization");
+        LogoutResponse result = new LogoutService().logout(auth);
 
         String message = result.getMessage();
         if (message == null) {

@@ -2,15 +2,16 @@ package handlers;
 
 import com.google.gson.Gson;
 import requests.CreateGameRequest;
+import responses.CreateGameResponse;
 import services.CreateGameService;
 import spark.Request;
 import spark.Response;
 
 public class CreateGameHandler {
     public Object CreateGameHandler(Request request, Response response, Class<CreateGameRequest> klass) {
-        var auth = request.headers("Authorization");//request json to request object (not for clear)
-        var bodyAsGson = new Gson().fromJson(request.body(),klass);//have to tell gson what to deserialize to if handler has a request
-        var result = new CreateGameService().newGame(bodyAsGson.getGameName(), auth);//pass object to service
+        String auth = request.headers("Authorization");//request json to request object (not for clear)
+        CreateGameRequest bodyAsGson = new Gson().fromJson(request.body(),klass);//have to tell gson what to deserialize to if handler has a request
+        CreateGameResponse result = new CreateGameService().newGame(bodyAsGson.getGameName(), auth);//pass object to service
 
         String message = result.getMessage();
         //set status code based on response object

@@ -1,14 +1,15 @@
 package handlers;
 
 import com.google.gson.Gson;
+import responses.ListGamesResponse;
 import services.ListGameService;
 import spark.Request;
 import spark.Response;
 
 public class ListGamesHandler {
     public Object ListGamesHandler(Request request, Response response) {
-        var auth = request.headers("Authorization");
-        var result = new ListGameService().listGames(auth);
+        String auth = request.headers("Authorization");
+        ListGamesResponse result = new ListGameService().listGames(auth);
 
         String message = result.getMessage();
         if (message == null) {

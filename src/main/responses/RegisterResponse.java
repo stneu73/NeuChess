@@ -15,13 +15,21 @@ public class RegisterResponse {
      * contains success or error message
      */
     String message;
-
+    /**
+     * Parameterized Constructor for RegisterResponse
+     * @param username username being read in
+     * @param authToken authentication token being read in
+     * @param message message to be returned to user
+     */
     public RegisterResponse(String username, String authToken, String message) {
         this.message = message;
         this.authToken = authToken;
         this.username = username;
     }
-
+    /**
+     * Constructor for RegisterResponse
+     * @param message error message to be given to the user
+     */
     public RegisterResponse(String message) {
         this.message = message;
         this.authToken = null;

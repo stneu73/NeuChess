@@ -2,6 +2,7 @@ package handlers;
 
 import com.google.gson.Gson;
 import requests.LoginRequest;
+import responses.LoginResponse;
 import services.LoginService;
 import spark.Request;
 import spark.Response;
@@ -9,8 +10,8 @@ import spark.Response;
 public class LoginHandler {
 
     public Object LoginHandler(Request request, Response response, Class<LoginRequest> klass) {
-        var bodyAsGson = new Gson().fromJson(request.body(), klass);
-        var result = new LoginService().login(bodyAsGson.getUsername(), bodyAsGson.getPassword());
+        LoginRequest bodyAsGson = new Gson().fromJson(request.body(), klass);
+        LoginResponse result = new LoginService().login(bodyAsGson.getUsername(), bodyAsGson.getPassword());
 
         String message = result.getMessage();
         if (message == null) {

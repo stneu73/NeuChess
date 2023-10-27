@@ -1,16 +1,16 @@
 package handlers;
 
 import com.google.gson.Gson;
-import requests.LoginRequest;
 import requests.RegisterRequest;
+import responses.RegisterResponse;
 import services.RegisterService;
 import spark.Request;
 import spark.Response;
 
 public class RegisterHandler {
     public Object RegisterHandler(Request request, Response response, Class<RegisterRequest> klass) {
-        var bodyAsGson = new Gson().fromJson(request.body(), klass);
-        var result = new RegisterService().registerUser(bodyAsGson.getUsername(), bodyAsGson.getPassword(), bodyAsGson.getEmail());
+        RegisterRequest bodyAsGson = new Gson().fromJson(request.body(), klass);
+        RegisterResponse result = new RegisterService().registerUser(bodyAsGson.getUsername(), bodyAsGson.getPassword(), bodyAsGson.getEmail());
 
         String message = result.getMessage();
         if (message == null) {

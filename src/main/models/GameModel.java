@@ -25,7 +25,6 @@ public class GameModel {
      * contains the name of the game as a string
      */
     String gameName;
-    String[] observerUsernames; //TODO: figure out how to store observer usernames
     private transient ChessGame game;
 
     public GameModel(String gameName) {
@@ -36,30 +35,27 @@ public class GameModel {
         this.whiteUsername = null;
         this.blackUsername = null;
     }
+
     public int getGameID() {
         return gameID;
     }
     public String getWhiteUsername() {
         return this.whiteUsername;
     }
+    public void setWhiteUsername(String whiteUsername) {
+        this.whiteUsername = whiteUsername;
+    }
     public String getBlackUsername() {
         return this.blackUsername;
     }
-    public String getGameName() {
-        return this.gameName;
+    public void setBlackUsername(String blackUsername) {
+        this.blackUsername = blackUsername;
     }
     public ChessGame getGame() {
         return this.game;
     }
-    public void addObserver(String username) {
-//        observerUsernames[observerUsernames.length] = username;
-    }
 
-    public void setBlackUsername(String blackUsername) {
-        this.blackUsername = blackUsername;
-    }
 
-    public void setWhiteUsername(String whiteUsername) {
-        this.whiteUsername = whiteUsername;
-    }
+
+
 }

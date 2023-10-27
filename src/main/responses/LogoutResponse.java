@@ -8,6 +8,10 @@ public class LogoutResponse {
      */
     String message;
 
+    /**
+     * Constructor for LogoutResponse
+     * @param message message to be returned to user
+     */
     public LogoutResponse(String message) {
         this.message = message;
     }

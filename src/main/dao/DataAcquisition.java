@@ -23,7 +23,11 @@ public interface DataAcquisition {
      * @throws DataAccessException If there is an error in accessing data this is thrown
      */
     int insertGame(GameModel gameModel) throws DataAccessException;
-
+    /**
+     * Finds a game in the database
+     * @param gameID gameID of game to be found
+     * @return returns a boolean based on if game is in the database
+     */
     boolean findGame(Integer gameID);
 
     /**
@@ -46,6 +50,12 @@ public interface DataAcquisition {
      */
     void claimSpot(Integer gameID, String username, String color) throws DataAccessException;
 
+    /**
+     * adds a user as a watcher to a game
+     * @param gameID game to watched
+     * @param authToken User/watcher's authorization token
+     * @throws DataAccessException If there is an error in accessing data this is thrown
+     */
     void addWatcher(Integer gameID, String authToken) throws DataAccessException;
 
     /**
@@ -64,12 +74,16 @@ public interface DataAcquisition {
 
     /**
      * creates a user in the database
-     *
-     * @return
+     * @return returns the user made
      * @throws DataAccessException If there is an error in accessing data this is thrown
      */
     User createUser(String username, User user) throws DataAccessException;
 
+    /**
+     * Finds a user in the database
+     * @param username username to be found
+     * @return returns a boolean based on if the user is in the database
+     */
     boolean findUser(String username);
 
     /**
@@ -94,10 +108,9 @@ public interface DataAcquisition {
     //auth Token
 
     /**
-     * inserts an authToken in the database
+     * generates and inserts an authToken into the database
      * @throws DataAccessException If there is an error in accessing data this is thrown
      */
-//    void insertAuthToken(String uuid, AuthToken authToken) throws DataAccessException;
 
     String generateAuthToken(String username) throws DataAccessException;
 
@@ -109,10 +122,16 @@ public interface DataAcquisition {
     AuthToken getAuthToken(String authToken) throws DataAccessException;
 
     /**
-     * removes an AtuhToken from the database
+     * removes an AuthToken from the database
      * @throws DataAccessException If there is an error in accessing data this is thrown
      */
     void deleteAuthToken(String authToken) throws DataAccessException;
+
+    /**
+     * Finds an authorization token in the database
+     * @param authToken user's authorization token
+     * @return returns a boolean based on if the authorization Token is in the database
+     */
 
     boolean findAuthToken(String authToken);
 }

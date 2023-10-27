@@ -22,7 +22,10 @@ public class CreateGameResponse {
         this.message = message;
 
     }
-
+    /**
+     * Constructor for CrateGameResponse
+     * @param message the message to be given to the client
+     */
     public CreateGameResponse(String message) {
         this.message = message;
         this.gameID = null;
