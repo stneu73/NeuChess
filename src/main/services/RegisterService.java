@@ -15,13 +15,6 @@ public class RegisterService {
      * @param password the password passed in by the user
      */
     public RegisterResponse registerUser(String username, String password, String email)  {
-
-//        try {
-//            user = MemoryDAO.getInstance().getUser(username);
-//        } catch (DataAccessException e) {
-//            return new RegisterResponse("Couldn't Access Database");
-//        }
-
         if (MemoryDAO.getInstance().findUser(username)) {
             return new RegisterResponse("Error: Username Already Taken");
         }

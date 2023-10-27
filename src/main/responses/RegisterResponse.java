@@ -31,4 +31,7 @@ public class RegisterResponse {
     public String getMessage() {
         return this.message;
     }
+    public String getUsername() {
+        return username;
+    }
 }

@@ -31,4 +31,8 @@ public class CreateGameResponse {
     public String getMessage() {
         return message;
     }
+
+    public Integer getGameID() {
+        return gameID;
+    }
 }

@@ -1,9 +1,7 @@
 package services;
 
-import chess.ChessGame;
 import dao.MemoryDAO;
 import dataAccess.DataAccessException;
-import models.GameModel;
 import responses.ListGamesResponse;
 
 /**

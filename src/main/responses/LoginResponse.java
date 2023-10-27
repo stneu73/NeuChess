@@ -30,4 +30,8 @@ public class LoginResponse {
     public String getMessage() {
         return this.message;
     }
+
+    public String getAuthToken() {
+        return authToken;
+    }
 }
