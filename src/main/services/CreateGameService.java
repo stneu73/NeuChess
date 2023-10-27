@@ -14,7 +14,7 @@ public class CreateGameService {
      * creates a new game in the database
      */
     public CreateGameResponse newGame(String gameName, String authToken) {
-        if (gameName.isEmpty()) {
+        if (gameName == null || gameName.isEmpty()) {
             return new CreateGameResponse("Error: Bad Request");
         }
         if (!MemoryDAO.getInstance().findAuthToken(authToken)) {
