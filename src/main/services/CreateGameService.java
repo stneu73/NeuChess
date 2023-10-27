@@ -3,7 +3,6 @@ package services;
 import dao.MemoryDAO;
 import dataAccess.DataAccessException;
 import models.GameModel;
-import requests.CreateGameRequest;
 import responses.CreateGameResponse;
 
 /**
