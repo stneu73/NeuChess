@@ -32,7 +32,7 @@ public class RegisterService {
         }
         String authToken;
         try {
-            authToken = MemoryDAO.getInstance().insertAuthToken(username);
+            authToken = MemoryDAO.getInstance().generateAuthToken(username);
         } catch (DataAccessException e) {
             return new RegisterResponse("Error: Couldn't Access Database");
         }

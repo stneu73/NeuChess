@@ -22,7 +22,7 @@ public class serverTests {
         Assertions.assertNull(result.getMessage(), "Database Clear returned non null value for message");
     }
     @Test
-    public void registerPositive() {
+    public void registerServicePositive() {
 
         String username = "TestUsername1";
         String password = "password123";
@@ -32,7 +32,7 @@ public class serverTests {
     }
 
     @Test
-    public void registerNegative() {
+    public void registerServiceNegative() {
         String username = "TestUsername1";
         String password = null;
         String email = "email";
@@ -41,19 +41,19 @@ public class serverTests {
     }
 
     @Test
-    public void createGamePositive() {
+    public void createGameServicePositive() {
         CreateGameResponse response = new CreateGameService().newGame("theGame", existingAuth);
         Assertions.assertNull(response.getMessage(), "");
     }
 
     @Test
-    public void createGameNegative() {
+    public void createGameServiceNegative() {
         CreateGameResponse response = new CreateGameService().newGame("",existingAuth);
         Assertions.assertTrue(response.getMessage().toLowerCase().contains("error: bad request"));
     }
 
     @Test
-    public void joinGamePositive() {
+    public void joinGameServicePositive() {
         int gameID = new CreateGameService().newGame("theGame", existingAuth).getGameID();
         JoinGameResponse response = new JoinGameService().joinGame(gameID, existingAuth,"WHITE");
         Assertions.assertNull(response.getMessage());
@@ -61,44 +61,44 @@ public class serverTests {
     }
 
     @Test
-    public void joinGameNegative() {
+    public void joinGameServiceNegative() {
         int gameID = 0;
         JoinGameResponse response = new JoinGameService().joinGame(gameID, existingAuth,"WHITE");
         Assertions.assertTrue(response.getMessage().toLowerCase().contains("error: bad request"));
     }
 
     @Test
-    public void ListGamePositive() {
+    public void ListGameServicePositive() {
         ListGamesResponse response = new ListGameService().listGames(existingAuth);
         Assertions.assertNull(response.getMessage());
     }
 
     @Test
-    public void ListGamesNegative() {
+    public void ListGamesServiceNegative() {
         ListGamesResponse response = new ListGameService().listGames("invalid auth");
         Assertions.assertTrue(response.getMessage().toLowerCase().contains("error: unauthorized"));
     }
 
     @Test
-    public void LoginPositive() {
+    public void LoginServicePositive() {
         LoginResponse response = new LoginService().login("TestUsername", "password123");
         Assertions.assertNull(response.getMessage());
     }
 
     @Test
-    public void LoginNegative() {
+    public void LoginServiceNegative() {
         LoginResponse response = new LoginService().login("TestUsername", "password12");
         Assertions.assertTrue(response.getMessage().toLowerCase().contains("error"));
     }
 
     @Test
-    public void LogoutPositive() {
+    public void LogoutServicePositive() {
         LogoutResponse response = new LogoutService().logout(existingAuth);
         Assertions.assertNull(response.getMessage());
     }
 
     @Test
-    public void LogoutNegative() {
+    public void LogoutServiceNegative() {
         LogoutResponse response = new LogoutService().logout("invalid auth");
         Assertions.assertTrue(response.getMessage().toLowerCase().contains("error"));
     }

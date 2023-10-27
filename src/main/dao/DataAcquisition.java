@@ -99,7 +99,7 @@ public interface DataAcquisition {
      */
 //    void insertAuthToken(String uuid, AuthToken authToken) throws DataAccessException;
 
-    String insertAuthToken(String username) throws DataAccessException;
+    String generateAuthToken(String username) throws DataAccessException;
 
     /**
      * finds and returns an auth token from the database
@@ -107,12 +107,6 @@ public interface DataAcquisition {
      * @throws DataAccessException If there is an error in accessing data this is thrown
      */
     AuthToken getAuthToken(String authToken) throws DataAccessException;
-
-//    /**
-//     * changes an authToken in the database
-//     * @throws DataAccessException If there is an error in accessing data this is thrown
-//     */
-//    void updateAuthToken() throws DataAccessException;
 
     /**
      * removes an AtuhToken from the database

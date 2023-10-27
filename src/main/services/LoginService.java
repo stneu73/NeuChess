@@ -3,7 +3,6 @@ package services;
 import dao.MemoryDAO;
 import dataAccess.DataAccessException;
 import responses.LoginResponse;
-import responses.LogoutResponse;
 
 /**
  * Logs a previously existing user into the server
@@ -31,7 +30,7 @@ public class LoginService {
 
         String authToken;
         try {
-            authToken = MemoryDAO.getInstance().insertAuthToken(username);
+            authToken = MemoryDAO.getInstance().generateAuthToken(username);
         } catch (DataAccessException e) {
             return new LoginResponse("Error: Couldn't Access Database");
         }

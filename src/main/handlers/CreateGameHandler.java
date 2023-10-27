@@ -11,21 +11,20 @@ public class CreateGameHandler {
         var auth = request.headers("Authorization");//request json to request object (not for clear)
         var bodyAsGson = new Gson().fromJson(request.body(),klass);//have to tell gson what to deserialize to if handler has a request
         var result = new CreateGameService().newGame(bodyAsGson.getGameName(), auth);//pass object to service
-        //set status code based on response object
-            //if statement looking at message
-                //res.status(value)
+
         String message = result.getMessage();
-        if (message == null) {
-            response.status(200);
+        //set status code based on response object
+        if (message == null) { //if statement looking at message
+            response.status(200); //response.status(value)
         }
         else if (message.toLowerCase().contains("bad")) {
-            response.status(400);//code 400
+            response.status(400);
         }
         else if (message.toLowerCase().contains("unauthorized")) {
-            response.status(401);//code 401
+            response.status(401);
         }
         else if (message.toLowerCase().contains("database")) {
-            response.status(500);//code 500
+            response.status(500);
         }
 
         return new Gson().toJson(result);//response object to response json

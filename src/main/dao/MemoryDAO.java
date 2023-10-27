@@ -61,12 +61,11 @@ public class MemoryDAO implements DataAcquisition {
         }
         else if (Objects.equals(color.toLowerCase(), "white")) {
             game.setWhiteUsername(username);
-        } //else add as observer
+        }
     }
 
     @Override
     public void addWatcher(Integer gameID, String authToken) throws DataAccessException {
-        String username = authStrToAuthToken.get(authToken).getUsername();
 
     }
 
@@ -106,7 +105,7 @@ public class MemoryDAO implements DataAcquisition {
     }
 
     @Override
-    public String insertAuthToken(String username) throws DataAccessException {
+    public String generateAuthToken(String username) throws DataAccessException {
         String uuid = String.valueOf(UUID.randomUUID());
 
         authStrToAuthToken.put(uuid,new AuthToken(uuid, username));
@@ -117,11 +116,6 @@ public class MemoryDAO implements DataAcquisition {
     public AuthToken getAuthToken(String authToken) throws DataAccessException {
         return authStrToAuthToken.get(authToken);
     }
-
-//    @Override
-//    public void updateAuthToken() throws DataAccessException {
-//
-//    }
 
     @Override
     public void deleteAuthToken(String authToken) throws DataAccessException {
