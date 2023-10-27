@@ -24,6 +24,8 @@ public interface DataAcquisition {
      */
     int insertGame(GameModel gameModel) throws DataAccessException;
 
+    boolean findGame(Integer gameID);
+
     /**
      * Receives a game ID or name and then finds the game in the database
      * @return returns the chess game specified to be found
@@ -43,6 +45,8 @@ public interface DataAcquisition {
      * @throws DataAccessException If there is an error in accessing data this is thrown
      */
     void claimSpot(Integer gameID, String username, String color) throws DataAccessException;
+
+    void addWatcher(Integer gameID, String authToken) throws DataAccessException;
 
     /**
      * changes the state of a game in the database based on user action
@@ -65,6 +69,8 @@ public interface DataAcquisition {
      * @throws DataAccessException If there is an error in accessing data this is thrown
      */
     User createUser(String username, User user) throws DataAccessException;
+
+    boolean findUser(String username);
 
     /**
      * finds a user in the database
@@ -114,4 +120,5 @@ public interface DataAcquisition {
      */
     void deleteAuthToken(String authToken) throws DataAccessException;
 
+    boolean findAuthToken(String authToken);
 }

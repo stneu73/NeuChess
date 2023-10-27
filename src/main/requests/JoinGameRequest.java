@@ -14,6 +14,10 @@ public class JoinGameRequest {
      */
     int gameID;
 
+    public JoinGameRequest(int gameID, String color) {
+        this.gameID = gameID;
+        this.playerColor = color;
+    }
     public int getGameID() {
         return gameID;
     }

@@ -32,6 +32,7 @@ public class MemoryDAO implements DataAcquisition {
         return gameModel.getGameID();
     }
 
+    @Override
     public boolean findGame(Integer gameID) {
         return gameIDToGameModel.containsKey(gameID);
     }
@@ -64,6 +65,12 @@ public class MemoryDAO implements DataAcquisition {
     }
 
     @Override
+    public void addWatcher(Integer gameID, String authToken) throws DataAccessException {
+        String username = authStrToAuthToken.get(authToken).getUsername();
+
+    }
+
+    @Override
     public void updateGame(GameModel gameModel) throws DataAccessException {
         gameIDToGameModel.replace(gameModel.getGameID(),gameModel);
     }
@@ -79,6 +86,7 @@ public class MemoryDAO implements DataAcquisition {
         return user;
     }
 
+    @Override
     public boolean findUser(String username) {
         return usernameToUsers.containsKey(username);
     }
@@ -122,6 +130,8 @@ public class MemoryDAO implements DataAcquisition {
         }
         authStrToAuthToken.remove(authToken);
     }
+
+    @Override
     public boolean findAuthToken(String authToken) {
         return authStrToAuthToken.containsKey(authToken);
     }

@@ -39,11 +39,17 @@ public class JoinGameService {
                     return new JoinGameResponse("Error: Color Already Taken");
                 }
             }
-        }
-        try {
-            MemoryDAO.getInstance().claimSpot(gameID,authToken,color);
-        } catch (DataAccessException e) {
-            return new JoinGameResponse("Error: Couldn't Access Database");
+            try {
+                MemoryDAO.getInstance().claimSpot(gameID, authToken, color);
+            } catch (DataAccessException e) {
+                return new JoinGameResponse("Error: Couldn't Access Database");
+            }
+        } else {
+            try {
+                MemoryDAO.getInstance().addWatcher(gameID,authToken);
+            } catch (DataAccessException e) {
+                return new JoinGameResponse("Error: Couldn't Access Database");
+            }
         }
         return new JoinGameResponse(null);
     }

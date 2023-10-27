@@ -39,5 +39,4 @@ public class LoginService {
 
         return new LoginResponse(username,authToken,null);
     }
-
 }
