@@ -6,7 +6,7 @@ public class CreateGameResponse {
     /**
      * contains the gameID to be given to the user
      */
-    private int gameID;
+    private Integer gameID;
     /**
      * Contains response message when attempting to create a game.
      */
@@ -23,5 +23,12 @@ public class CreateGameResponse {
 
     }
 
+    public CreateGameResponse(String message) {
+        this.message = message;
+        this.gameID = null;
+    }
 
+    public String getMessage() {
+        return message;
+    }
 }

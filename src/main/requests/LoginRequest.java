@@ -13,4 +13,12 @@ public class LoginRequest {
      * holds the password of the request
      */
     String password;
+
+    public String getPassword() {
+        return password;
+    }
+
+    public String getUsername() {
+        return username;
+    }
 }

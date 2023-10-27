@@ -1,6 +1,9 @@
 package models;
 
 import chess.ChessGame;
+import chess.Game;
+
+import java.util.Random;
 
 /**
  * Stores information structure of a chess game
@@ -22,19 +25,41 @@ public class GameModel {
      * contains the name of the game as a string
      */
     String gameName;
-    int getGameID() {
-        return 0;
+    String[] observerUsernames; //TODO: figure out how to store observer usernames
+    private transient ChessGame game;
+
+    public GameModel(String gameName) {
+        this.gameName = gameName;
+        this.game = new Game();
+        Random rand = new Random();
+        this.gameID = rand.nextInt(200000);
+        this.whiteUsername = null;
+        this.blackUsername = null;
     }
-    String getWhiteUsername() {
-        return null;
+    public int getGameID() {
+        return gameID;
     }
-    String getBlackUsername() {
-        return null;
+    public String getWhiteUsername() {
+        return this.whiteUsername;
     }
-    String getGameName() {
-        return null;
+    public String getBlackUsername() {
+        return this.blackUsername;
     }
-    ChessGame getGame() {
-        return null;
+    public String getGameName() {
+        return this.gameName;
+    }
+    public ChessGame getGame() {
+        return this.game;
+    }
+    public void addObserver(String username) {
+//        observerUsernames[observerUsernames.length] = username;
+    }
+
+    public void setBlackUsername(String blackUsername) {
+        this.blackUsername = blackUsername;
+    }
+
+    public void setWhiteUsername(String whiteUsername) {
+        this.whiteUsername = whiteUsername;
     }
 }

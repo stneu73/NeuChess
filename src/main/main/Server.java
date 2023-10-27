@@ -3,7 +3,9 @@ package main;
 
 import handlers.*;
 import requests.CreateGameRequest;
+import requests.JoinGameRequest;
 import requests.LoginRequest;
+import requests.RegisterRequest;
 import spark.Request;
 import spark.Response;
 import spark.Spark;
@@ -34,13 +36,12 @@ public class Server {
 
     private Object registerUser(Request request, Response response) {
         response.type("application/json");
-//        Class<LoginRequest> klass = new Class<LoginRequest>;
-        return new RegisterHandler().RegisterHandler(request,response,klass);
+        return new RegisterHandler().RegisterHandler(request,response, RegisterRequest.class);
     }
 
     private Object loginUser(Request request, Response response) {
         response.type("application/json");
-        return new LoginHandler().LoginHandler(request,response,klass);
+        return new LoginHandler().LoginHandler(request,response, LoginRequest.class);
     }
 
     private Object logoutUser(Request request, Response response) {
@@ -54,10 +55,10 @@ public class Server {
     }
     private Object createGame(Request request, Response response) {
         response.type("application/json");
-        return new CreateGameHandler().CreateGameHandler(request,response,klass);
+        return new CreateGameHandler().CreateGameHandler(request,response, CreateGameRequest.class);
     }
     private Object joinGame(Request request, Response response) {
         response.type("application/json");
-        return new JoinGameHandler().JoinGameHandler(request,response,klass);
+        return new JoinGameHandler().JoinGameHandler(request,response, JoinGameRequest.class);
     }
 }

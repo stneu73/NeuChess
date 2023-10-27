@@ -13,4 +13,12 @@ public class JoinGameRequest {
      * holds the gameID number
      */
     int gameID;
+
+    public int getGameID() {
+        return gameID;
+    }
+
+    public String getPlayerColor() {
+        return playerColor;
+    }
 }

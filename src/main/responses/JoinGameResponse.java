@@ -11,17 +11,17 @@ public class JoinGameResponse {
 
     /**
      * Constructor for JoinGameResponse. Initializes class variable message with the given response.
-     * @param response given response to return to the user. Can be success or failure response.
+     * @param message given response to return to the user. Can be success or failure response.
      */
-    public JoinGameResponse(String response) {
-        this.message = response;
+    public JoinGameResponse(String message) {
+        this.message = message;
     }
 
     public String getMessage() {
         return message;
     }
 
-    public void setMessage(String message) {
-        this.message = message;
-    }
+//    public void setMessage(String message) {
+//        this.message = message;
+//    }
 }

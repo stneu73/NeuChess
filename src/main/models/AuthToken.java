@@ -12,12 +12,16 @@ public class AuthToken {
      * contains the username as a string
      */
     String username;
-
-    String getAuthToken() {
-        return null;
+    public AuthToken(String authToken, String username) {
+        this.authToken = authToken;
+        this.username = username;
     }
 
-    String getUsername() {
-        return null;
+    public String getAuthToken() {
+        return this.authToken;
+    }
+
+    public String getUsername() {
+        return this.username;
     }
 }

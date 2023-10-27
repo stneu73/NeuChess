@@ -12,15 +12,15 @@ public class ClearResponse {
      * Constructor for ClearResponse. Initializes class variable message with the given response.
      * @param response given response to return to the user. Can be success or failure response.
      */
+
     public ClearResponse(String response) {
         this.message = response;
     }
 
+    public ClearResponse() {
+        this.message = null;
+    };
     public String getMessage() {
         return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
     }
 }

@@ -1,6 +1,9 @@
 package services;
 
+import dao.MemoryDAO;
+import dataAccess.DataAccessException;
 import models.GameModel;
+import responses.JoinGameResponse;
 
 /**
  * Adds the user to a game
@@ -9,10 +12,39 @@ public class JoinGameService {
     /**
      * adds a user to a game
      * @param gameID the number of the game ID to be joined
-     * @param username the name of the user joining the game
+     * @param authToken the name of the user joining the game
      * @param color the team color the user will be joining the game as
      */
-    void joinGame(GameModel gameID, String username, String color) {
-
+    public JoinGameResponse joinGame(int gameID, String authToken, String color) {
+        if (!MemoryDAO.getInstance().findAuthToken(authToken)) {
+            return new JoinGameResponse("Error: Unauthorized");
+        }
+        if (!MemoryDAO.getInstance().findGame(gameID)) {
+            return new JoinGameResponse("Error: Bad Request");
+        }
+        GameModel game;
+        try {
+            game = MemoryDAO.getInstance().getGame(gameID);
+        } catch (DataAccessException e) {
+            return new JoinGameResponse("Error: Couldn't Access Database");
+        }
+        if (color != null) {
+            if (color.equalsIgnoreCase("white")) {
+                if (game.getWhiteUsername() != null) {
+                    return new JoinGameResponse("Error: Color Already Taken");
+                }
+            }
+            if (color.equalsIgnoreCase("black")) {
+                if (game.getBlackUsername() != null) {
+                    return new JoinGameResponse("Error: Color Already Taken");
+                }
+            }
+        }
+        try {
+            MemoryDAO.getInstance().claimSpot(gameID,authToken,color);
+        } catch (DataAccessException e) {
+            return new JoinGameResponse("Error: Couldn't Access Database");
+        }
+        return new JoinGameResponse(null);
     }
 }

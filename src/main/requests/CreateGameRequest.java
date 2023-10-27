@@ -8,4 +8,8 @@ public class CreateGameRequest {
      * stores the name of a game
      */
     String gameName;
+
+    public String getGameName() {
+        return gameName;
+    }
 }

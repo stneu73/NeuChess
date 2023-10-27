@@ -8,10 +8,6 @@ public class RegisterResponse {
      */
     String username;
     /**
-     * contains the password of the associated as a string
-     */
-    String password;
-    /**
      * contains the authentication token from the database as a string
      */
     String authToken;
@@ -20,10 +16,19 @@ public class RegisterResponse {
      */
     String message;
 
-    public RegisterResponse(String username, String password, String authToken, String message) {
+    public RegisterResponse(String username, String authToken, String message) {
         this.message = message;
         this.authToken = authToken;
-        this.password = password;
         this.username = username;
+    }
+
+    public RegisterResponse(String message) {
+        this.message = message;
+        this.authToken = null;
+        this.username = null; // should this be the duplicate username?
+    }
+
+    public String getMessage() {
+        return this.message;
     }
 }

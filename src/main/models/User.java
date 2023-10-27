@@ -5,10 +5,6 @@ package models;
  */
 public class User {
     /**
-     * Contains the user's ID as an int
-     */
-    int userID;
-    /**
      * contains the username as a string
      */
     String username;
@@ -20,16 +16,18 @@ public class User {
      * contains the email as a string
      */
     String email;
-    int getUserID() {
-        return 0;
+    public User(String username, String password, String email) {
+        this.username = username;
+        this.password = password;
+        this.email = email;
     }
-    String getUsername() {
-        return null;
+    public String getUsername() {
+        return this.username;
     }
-    String getPassword() {
-        return null;
+    public String getPassword() {
+        return this.password;
     }
-    String getEmail() {
-        return null;
+    public String getEmail() {
+        return this.email;
     }
 }
