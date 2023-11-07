@@ -1,6 +1,8 @@
 package main;
 
 
+import dao.SQLDAO;
+import dataAccess.DataAccessException;
 import handlers.*;
 import requests.CreateGameRequest;
 import requests.JoinGameRequest;
@@ -15,6 +17,11 @@ public class Server {
 
     private void run() {
 
+        try {
+            new SQLDAO().configureDatabase()
+        } catch (DataAccessException e) {
+            throw new RuntimeException(e);
+        }
         int port = 8080;
         Spark.port(port);
         Spark.externalStaticFileLocation("C:/Users/Spencer/Documents/Classes/2023 Fall/C S 240/NeuChess/web");

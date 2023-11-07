@@ -28,7 +28,7 @@ public interface DataAcquisition {
      * @param gameID gameID of game to be found
      * @return returns a boolean based on if game is in the database
      */
-    boolean findGame(Integer gameID);
+    boolean findGame(Integer gameID) throws DataAccessException;
 
     /**
      * Receives a game ID or name and then finds the game in the database
@@ -84,7 +84,7 @@ public interface DataAcquisition {
      * @param username username to be found
      * @return returns a boolean based on if the user is in the database
      */
-    boolean findUser(String username);
+    boolean findUser(String username) throws DataAccessException;
 
     /**
      * finds a user in the database
@@ -133,5 +133,5 @@ public interface DataAcquisition {
      * @return returns a boolean based on if the authorization Token is in the database
      */
 
-    boolean findAuthToken(String authToken);
+    boolean findAuthToken(String authToken) throws DataAccessException;
 }
