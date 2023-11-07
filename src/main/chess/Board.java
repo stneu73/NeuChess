@@ -3,6 +3,13 @@ package chess;
 public class Board implements ChessBoard {
     private ChessPiece[][] piecesOnBoard = new ChessPiece[8][8];
 
+    public Board() {
+        this.piecesOnBoard = new ChessPiece[8][8];
+    }
+    public Board(char[] serializedBoard) {
+        deserializer(serializedBoard);
+    }
+
     @Override
     public void addPiece(ChessPosition position, ChessPiece piece) {
         this.piecesOnBoard[position.getColumnIndex()][position.getRowIndex()] = piece;
@@ -83,12 +90,66 @@ public class Board implements ChessBoard {
                 case QUEEN -> piece = new Queen(pieceColor);
                 case BISHOP -> piece = new Bishop(pieceColor);
                 case KNIGHT -> piece = new Knight(pieceColor);
-            };
+            }
             this.piecesOnBoard[endPosition.getColumnIndex()][endPosition.getRowIndex()] = piece;
         }
         else {
             this.piecesOnBoard[endPosition.getColumnIndex()][endPosition.getRowIndex()] = this.piecesOnBoard[startPosition.getColumnIndex()][startPosition.getRowIndex()];
         }
         deletePiece(startPosition);
+    }
+
+    public char[] boardSerializer() {
+        char[] serializedBoard = new char[64];
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                char c = 0;
+                if (getPiecesOnBoard()[i][j] == null) {
+                    c = 'e';
+                } else if (getPiecesOnBoard()[i][j].getTeamColor() == ChessGame.TeamColor.WHITE)
+                switch(getPiecesOnBoard()[i][j].getPieceType()) {
+                    case ROOK -> c = 'R';
+                    case PAWN -> c = 'P';
+                    case KING -> c = 'K';
+                    case QUEEN -> c = 'Q';
+                    case BISHOP -> c = 'B';
+                    case KNIGHT -> c = 'N';
+                } else {
+                    switch(getPiecesOnBoard()[i][j].getPieceType()) {
+                        case ROOK -> c = 'r';
+                        case PAWN -> c = 'p';
+                        case KING -> c = 'k';
+                        case QUEEN -> c = 'q';
+                        case BISHOP -> c = 'b';
+                        case KNIGHT -> c = 'n';
+                    }
+                }
+                serializedBoard[i*j] = c;
+            }
+        }
+        return serializedBoard;
+    }
+
+    public void deserializer(char[] gameBoard) {
+        for (int i = 9; i < 64; i++) {
+            if (gameBoard[i] == 'e') {
+                piecesOnBoard[i/8][i%8] = null;
+            } else {
+                switch(gameBoard[i]) {
+                    case 'R' -> piecesOnBoard[i/8][i%8] = new Rook(ChessGame.TeamColor.WHITE);
+                    case 'P' -> piecesOnBoard[i/8][i%8] = new Pawn(ChessGame.TeamColor.WHITE);
+                    case 'K' -> piecesOnBoard[i/8][i%8] = new King(ChessGame.TeamColor.WHITE);
+                    case 'Q' -> piecesOnBoard[i/8][i%8] = new Queen(ChessGame.TeamColor.WHITE);
+                    case 'B' -> piecesOnBoard[i/8][i%8] = new Bishop(ChessGame.TeamColor.WHITE);
+                    case 'N' -> piecesOnBoard[i/8][i%8] = new Knight(ChessGame.TeamColor.WHITE);
+                    case 'r' -> piecesOnBoard[i/8][i%8] = new Rook(ChessGame.TeamColor.BLACK);
+                    case 'p' -> piecesOnBoard[i/8][i%8] = new Pawn(ChessGame.TeamColor.BLACK);
+                    case 'k' -> piecesOnBoard[i/8][i%8] = new King(ChessGame.TeamColor.BLACK);
+                    case 'q' -> piecesOnBoard[i/8][i%8] = new Queen(ChessGame.TeamColor.BLACK);
+                    case 'b' -> piecesOnBoard[i/8][i%8] = new Bishop(ChessGame.TeamColor.BLACK);
+                    case 'n' -> piecesOnBoard[i/8][i%8] = new Knight(ChessGame.TeamColor.BLACK);
+                }
+            }
+        }
     }
 }

@@ -14,6 +14,13 @@ public class Game implements ChessGame{
         this.board = new Board();
         this.hypotheticalBoard = new Board();
     }
+
+    public Game(char[] gameBoard) {
+        this.teamTurn = TeamColor.WHITE;
+        this.allTeamMoves = new HashSet<>();
+        this.board = new Board(gameBoard);
+        this.hypotheticalBoard = new Board();
+    }
     @Override
     public TeamColor getTeamTurn() {
         return this.teamTurn;
