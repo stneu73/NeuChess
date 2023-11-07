@@ -18,7 +18,7 @@ public class Server {
     private void run() {
 
         try {
-            new SQLDAO().configureDatabase()
+            new SQLDAO().configureDatabase();
         } catch (DataAccessException e) {
             throw new RuntimeException(e);
         }
