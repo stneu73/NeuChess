@@ -15,8 +15,8 @@ public class Game implements ChessGame{
         this.hypotheticalBoard = new Board();
     }
 
-    public Game(char[] gameBoard) {
-        this.teamTurn = TeamColor.WHITE;
+    public Game(char[] gameBoard, TeamColor color) {
+        this.teamTurn = color; //TODO: make sure I can pass in the correct color's turn from the server
         this.allTeamMoves = new HashSet<>();
         this.board = new Board(gameBoard);
         this.hypotheticalBoard = new Board();
