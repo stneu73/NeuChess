@@ -1,6 +1,7 @@
 package services;
 
 import dao.MemoryDAO;
+import dao.SQLDAO;
 import dataAccess.DataAccessException;
 import models.GameModel;
 import responses.JoinGameResponse;
@@ -16,15 +17,24 @@ public class JoinGameService {
      * @param color the team color the user will be joining the game as
      */
     public JoinGameResponse joinGame(int gameID, String authToken, String color) {
-        if (!MemoryDAO.getInstance().findAuthToken(authToken)) {
-            return new JoinGameResponse("Error: Unauthorized");
+        SQLDAO dao = new SQLDAO();
+        try {
+            if (!dao.findAuthToken(authToken)) {
+                return new JoinGameResponse("Error: Unauthorized");
+            }
+        } catch (DataAccessException e) {
+            return new JoinGameResponse("Error: Couldn't Access Database");
         }
-        if (!MemoryDAO.getInstance().findGame(gameID)) {
-            return new JoinGameResponse("Error: Bad Request");
+        try {
+            if (!dao.findGame(gameID)) {
+                return new JoinGameResponse("Error: Bad Request");
+            }
+        } catch (DataAccessException e) {
+            return new JoinGameResponse("Error: Couldn't Access Database");
         }
         GameModel game;
         try {
-            game = MemoryDAO.getInstance().getGame(gameID);
+            game = dao.getGame(gameID);//MemoryDAO.getInstance().getGame(gameID);
         } catch (DataAccessException e) {
             return new JoinGameResponse("Error: Couldn't Access Database");
         }
@@ -40,13 +50,13 @@ public class JoinGameService {
                 }
             }
             try {
-                MemoryDAO.getInstance().claimSpot(gameID, authToken, color);
+                dao.claimSpot(gameID, authToken, color);//MemoryDAO.getInstance().claimSpot(gameID, authToken, color);
             } catch (DataAccessException e) {
                 return new JoinGameResponse("Error: Couldn't Access Database");
             }
         } else {
             try {
-                MemoryDAO.getInstance().addWatcher(gameID,authToken);
+                dao.addWatcher(gameID,authToken);//MemoryDAO.getInstance().addWatcher(gameID,authToken);
             } catch (DataAccessException e) {
                 return new JoinGameResponse("Error: Couldn't Access Database");
             }

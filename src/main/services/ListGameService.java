@@ -1,6 +1,7 @@
 package services;
 
 import dao.MemoryDAO;
+import dao.SQLDAO;
 import dataAccess.DataAccessException;
 import responses.ListGamesResponse;
 
@@ -13,11 +14,16 @@ public class ListGameService {
      * @return the list of games
      */
     public ListGamesResponse listGames(String authToken) {
-        if (!MemoryDAO.getInstance().findAuthToken(authToken)) {
-            return new ListGamesResponse("Error: Unauthorized");
+        SQLDAO dao = new SQLDAO();
+        try {
+            if (!dao.findAuthToken(authToken)) {
+                return new ListGamesResponse("Error: Unauthorized");
+            }
+        } catch (DataAccessException e) {
+            return new ListGamesResponse("Error: Couldn't Access Database");
         }
         try {
-            return new ListGamesResponse(MemoryDAO.getInstance().getAllGames(authToken));
+            return new ListGamesResponse(dao.getAllGames(authToken));//MemoryDAO.getInstance().getAllGames(authToken));
         } catch (DataAccessException e) {
             return new ListGamesResponse("Error: Couldn't Access Database");
         }

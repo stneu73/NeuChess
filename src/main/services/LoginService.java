@@ -1,6 +1,7 @@
 package services;
 
 import dao.MemoryDAO;
+import dao.SQLDAO;
 import dataAccess.DataAccessException;
 import responses.LoginResponse;
 
@@ -14,12 +15,17 @@ public class LoginService {
      * @param password the given password from the user attempting to log in
      */
     public LoginResponse login(String username, String password) {
-        if (!MemoryDAO.getInstance().findUser(username)) {
-            return new LoginResponse("Error: Unauthorized: Username Does Not Exist");
+        SQLDAO dao = new SQLDAO();
+        try {
+            if (!dao.findUser(username)) {//!MemoryDAO.getInstance().findUser(username)) {
+                return new LoginResponse("Error: Unauthorized: Username Does Not Exist");
+            }
+        } catch (DataAccessException e) {
+            return new LoginResponse("Error: Couldn't Access Database");
         }
         models.User user;
         try {
-            user = MemoryDAO.getInstance().getUser(username);
+            user = dao.getUser(username);//MemoryDAO.getInstance().getUser(username);
         } catch (DataAccessException e) {
             return new LoginResponse("Error: Couldn't Access Database");
         }
@@ -30,7 +36,7 @@ public class LoginService {
 
         String authToken;
         try {
-            authToken = MemoryDAO.getInstance().generateAuthToken(username);
+            authToken = dao.generateAuthToken(username);//MemoryDAO.getInstance().generateAuthToken(username);
         } catch (DataAccessException e) {
             return new LoginResponse("Error: Couldn't Access Database");
         }

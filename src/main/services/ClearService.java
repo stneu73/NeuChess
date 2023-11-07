@@ -1,6 +1,7 @@
 package services;
 
 import dao.MemoryDAO;
+import dao.SQLDAO;
 import dataAccess.DataAccessException;
 import responses.ClearResponse;
 
@@ -13,7 +14,9 @@ public class ClearService {
      */
     public ClearResponse clearAll() {
         try {
-            MemoryDAO.getInstance().clearData();
+            SQLDAO dao = new SQLDAO();
+            dao.clearData();
+//            MemoryDAO.getInstance().clearData();
         } catch (DataAccessException e) {
             return new ClearResponse("Error: Couldn't Access Database");
         }

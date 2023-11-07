@@ -1,6 +1,7 @@
 package services;
 
 import dao.MemoryDAO;
+import dao.SQLDAO;
 import dataAccess.DataAccessException;
 import models.User;
 import responses.RegisterResponse;
@@ -15,8 +16,13 @@ public class RegisterService {
      * @param password the password passed in by the user
      */
     public RegisterResponse registerUser(String username, String password, String email)  {
-        if (MemoryDAO.getInstance().findUser(username)) {
-            return new RegisterResponse("Error: Username Already Taken");
+        SQLDAO dao = new SQLDAO();
+        try {
+            if (dao.findUser(username)) {//MemoryDAO.getInstance().findUser(username)) {
+                return new RegisterResponse("Error: Username Already Taken");
+            }
+        } catch (DataAccessException e) {
+            return new RegisterResponse("Error: Couldn't Access Database");
         }
         if (password == null) {
             return new RegisterResponse("Error: Bad Request");
@@ -26,13 +32,13 @@ public class RegisterService {
         }
         User user;
         try {
-            user = MemoryDAO.getInstance().createUser(username, new User(username, password, email));
+            user = dao.createUser(username, new User(username, password, email));//MemoryDAO.getInstance().createUser(username, new User(username, password, email));
         } catch (DataAccessException e) {
             return new RegisterResponse("Error: Couldn't Access Database");
         }
         String authToken;
         try {
-            authToken = MemoryDAO.getInstance().generateAuthToken(username);
+            authToken = dao.generateAuthToken(username);// MemoryDAO.getInstance().generateAuthToken(username);
         } catch (DataAccessException e) {
             return new RegisterResponse("Error: Couldn't Access Database");
         }

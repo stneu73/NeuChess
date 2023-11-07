@@ -1,6 +1,7 @@
 package services;
 
 import dao.MemoryDAO;
+import dao.SQLDAO;
 import dataAccess.DataAccessException;
 import org.eclipse.jetty.util.log.Log;
 import responses.LogoutResponse;
@@ -13,11 +14,16 @@ public class LogoutService {
      * logs the current user out of the current session
      */
     public LogoutResponse logout(String authToken) {
-        if (!MemoryDAO.getInstance().findAuthToken(authToken)) {
-            return new LogoutResponse("Error: Unauthorized");
+        SQLDAO dao = new SQLDAO();
+        try {
+            if (!dao.findAuthToken(authToken)) {//!MemoryDAO.getInstance().findAuthToken(authToken)) {
+                return new LogoutResponse("Error: Unauthorized");
+            }
+        } catch (DataAccessException e) {
+            return new LogoutResponse("Error: Couldn't Access DataBase");
         }
         try {
-            MemoryDAO.getInstance().deleteAuthToken(authToken);
+            dao.deleteAuthToken(authToken);//MemoryDAO.getInstance().deleteAuthToken(authToken);
         } catch (DataAccessException e) {
             return new LogoutResponse("Error: Couldn't Access DataBase");
         }
