@@ -6,7 +6,6 @@ import models.AuthToken;
 import models.GameModel;
 import models.User;
 
-import javax.xml.crypto.Data;
 import java.sql.SQLException;
 import java.util.Objects;
 import java.util.UUID;
