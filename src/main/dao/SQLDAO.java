@@ -14,42 +14,42 @@ import java.util.UUID;
 public class SQLDAO implements DataAcquisition {
     public void configureDatabase() throws DataAccessException {
         try (var conn = new Database().getConnection()) {
-            var createDbStatement = conn.prepareStatement("CREATE DATABASE IF NOT EXISTS chess");
-            createDbStatement.executeUpdate();
+//            var createDbStatement = conn.prepareStatement("CREATE DATABASE IF NOT EXISTS chess");
+//            createDbStatement.executeUpdate();
 
-            conn.setCatalog("chess");
+//            conn.setCatalog("chess");
 
             var createUserTable = """
-                CREATE TABLE  IF NOT EXISTS user (
+                CREATE TABLE IF NOT EXISTS user (
                     id INT NOT NULL AUTO_INCREMENT,
                     username VARCHAR(255) NOT NULL,
                     password VARCHAR(255) NOT NULL,
                     email VARCHAR(255) NOT NULL,
-                    PRIMARY KEY(username)
-                )""";
+                    PRIMARY KEY(id)
+                );""";
 
             try (var createTableStatement = conn.prepareStatement(createUserTable)) {
                 createTableStatement.executeUpdate();
             }
             var createAuthTable = """
-                CREATE TABLE  IF NOT EXISTS auth (
+                CREATE TABLE IF NOT EXISTS auth (
                     authToken VARCHAR(255) NOT NULL,
                     username VARCHAR(255) NOT NULL,
                     PRIMARY KEY(authToken)
-                )""";
+                );""";
             try (var createTableStatement = conn.prepareStatement(createAuthTable)) {
                 createTableStatement.executeUpdate();
             }
 
             var createGameTable = """
-                Create Table  IF NOT EXISTS games (
+                Create Table IF NOT EXISTS games (
                     id INT NOT NULL,
                     whiteUsername VARCHAR(255),
                     blackUsername VARCHAR(255),
                     gameName VARCHAR(255) NOT NULL,
                     gameBoard VARCHAR(255) NOT NULL,
                     PRIMARY KEY(id)
-                )""";
+                );""";
 
             try (var createTableStatement = conn.prepareStatement(createGameTable)) {
                 createTableStatement.executeUpdate();
@@ -64,20 +64,26 @@ public class SQLDAO implements DataAcquisition {
     public void clearData() throws DataAccessException {
         try (var conn = new Database().getConnection()) {
             conn.setCatalog("chess");
-            var dropUserTable = "DROP TABLE user";
+            var dropUserTable = "DROP TABLE user;";
             try (var dropTableStatement = conn.prepareStatement(dropUserTable)) {
                 dropTableStatement.executeUpdate();
             }
-            var dropAuthTable = "DROP TABLE auth";
+            var dropAuthTable = "DROP TABLE auth;";
             try (var dropTableStatement = conn.prepareStatement(dropAuthTable)) {
                 dropTableStatement.executeUpdate();
             }
-            var dropGamesTable = "DROP TABLE games";
+            var dropGamesTable = "DROP TABLE games;";
             try (var dropTableStatement = conn.prepareStatement(dropGamesTable)) {
                 dropTableStatement.executeUpdate();
             }
 
         } catch (SQLException e) {
+            throw new DataAccessException("fail");
+        }
+
+        try {
+            configureDatabase();
+        } catch (DataAccessException e) {
             throw new DataAccessException("fail");
         }
 
@@ -87,15 +93,15 @@ public class SQLDAO implements DataAcquisition {
     public int insertGame(GameModel gameModel) throws DataAccessException {
         try (var conn = new Database().getConnection()) {
             conn.setCatalog("chess");
-            try (var preparedStatement = conn.prepareStatement("INSERT INTO games (id, whiteUsername, blackUsername, gameName, gameBoard) VALUES (?,?,?,?,?) RETURN_GENERATED_KEYS")) {
+            try (var preparedStatement = conn.prepareStatement("INSERT INTO games (id, whiteUsername, blackUsername, gameName, gameBoard) VALUES (?,?,?,?,?);")) {
                 preparedStatement.setInt(1,gameModel.getGameID());
                 preparedStatement.setString(2,gameModel.getWhiteUsername());
                 preparedStatement.setString(3,gameModel.getBlackUsername());
                 preparedStatement.setString(4,gameModel.getGameName());
-//                preparedStatement.setString(5,gameModel.getGame()); //TODO fix this to be a serialized version of the board state
+                preparedStatement.setString(5,gameModel.getGame().gameToString()); //TODO fix this to be a serialized version of the board state
 
                 preparedStatement.executeUpdate();
-                //TODO: get the generated keys?
+                //TODO: get the generated keys? what is that really?
             }
 
         } catch (SQLException e) {
@@ -110,7 +116,7 @@ public class SQLDAO implements DataAcquisition {
         try (var conn = new Database().getConnection()) {
             conn.setCatalog("chess");
             try (var preparedStatement = conn.prepareStatement("SELECT id FROM games WHERE id =" + gameID + ";")) {
-                if (preparedStatement.executeQuery().getInt("id") == gameID) {
+                if (preparedStatement.executeQuery().next()) {
                     flag = true;
                 }
             }
@@ -140,7 +146,7 @@ public class SQLDAO implements DataAcquisition {
         GameModel[] gameList;
         try (var conn = new Database().getConnection()) {
             conn.setCatalog("chess");
-            try (var preparedStatement = conn.prepareStatement("SELECT id, whiteUsername, blackUsername, gameName, gameBoard FROM games WHERE id=?;")) {
+            try (var preparedStatement = conn.prepareStatement("SELECT * FROM games;")) {// id, whiteUsername, blackUsername, gameName, gameBoard FROM games WHERE id=?;")) {
                 try (var result = preparedStatement.executeQuery()) {
                     gameList = new GameModel[result.getFetchSize()];
                     int i = 0;
@@ -162,7 +168,7 @@ public class SQLDAO implements DataAcquisition {
             conn.setCatalog("chess");
             try (var preparedStatement = conn.prepareStatement("SELECT id, "+color.toLowerCase()+"Username FROM games WHERE id =?;")) {
                 preparedStatement.setInt(1,gameID);
-                //TODO
+                preparedStatement.executeUpdate();
             }
         } catch (SQLException e) {
             throw new DataAccessException("fail");
@@ -188,7 +194,7 @@ public class SQLDAO implements DataAcquisition {
     public User createUser(String username, User user) throws DataAccessException {
         try (var conn = new Database().getConnection()) {
             conn.setCatalog("chess");
-            try (var preparedStatement = conn.prepareStatement("INSERT INTO user (username, password, email) VALUES (?,?,?)")) {
+            try (var preparedStatement = conn.prepareStatement("INSERT INTO user (username, password, email) VALUES (?,?,?);")) {
                 preparedStatement.setString(1,user.getUsername());
                 preparedStatement.setString(2,user.getPassword());
                 preparedStatement.setString(3,user.getEmail());
@@ -248,7 +254,7 @@ public class SQLDAO implements DataAcquisition {
         String uuid = String.valueOf(UUID.randomUUID());
         try (var conn = new Database().getConnection()) {
             conn.setCatalog("chess");
-            try (var preparedStatement = conn.prepareStatement("INSERT INTO auth (authToken, username) VALUES (?,?)")) {
+            try (var preparedStatement = conn.prepareStatement("INSERT INTO auth (authToken, username) VALUES (?,?);")) {
                 preparedStatement.setString(1,uuid);
                 preparedStatement.setString(2,username);
 
@@ -284,7 +290,7 @@ public class SQLDAO implements DataAcquisition {
         }
         try (var conn = new Database().getConnection()) {
             conn.setCatalog("chess");
-            try (var preparedStatement = conn.prepareStatement("DELETE FROM auth WHERE authToken=?")) {
+            try (var preparedStatement = conn.prepareStatement("DELETE FROM auth WHERE authToken=?;")) {
                 preparedStatement.setString(1,authToken);
 
                 preparedStatement.executeUpdate();

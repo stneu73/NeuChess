@@ -6,8 +6,8 @@ public class Board implements ChessBoard {
     public Board() {
         this.piecesOnBoard = new ChessPiece[8][8];
     }
-    public Board(char[] serializedBoard) {
-        deserializer(serializedBoard);
+    public Board(String serializedBoard) {
+        stringToBoard(serializedBoard);
     }
 
     @Override
@@ -99,8 +99,8 @@ public class Board implements ChessBoard {
         deletePiece(startPosition);
     }
 
-    public char[] boardSerializer() {
-        char[] serializedBoard = new char[64];
+    public StringBuilder boardToStringBuilder() {
+        StringBuilder serializedBoard = new StringBuilder();
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
                 char c = 0;
@@ -124,18 +124,19 @@ public class Board implements ChessBoard {
                         case KNIGHT -> c = 'n';
                     }
                 }
-                serializedBoard[i*j] = c;
+                serializedBoard.append(c);
             }
         }
         return serializedBoard;
     }
 
-    public void deserializer(char[] gameBoard) {
+    public void stringToBoard(String gameBoard) {
+        char[] charGameBoard = gameBoard.toCharArray();
         for (int i = 9; i < 64; i++) {
-            if (gameBoard[i] == 'e') {
+            if (charGameBoard[i] == 'e') {
                 piecesOnBoard[i/8][i%8] = null;
             } else {
-                switch(gameBoard[i]) {
+                switch(charGameBoard[i]) {
                     case 'R' -> piecesOnBoard[i/8][i%8] = new Rook(ChessGame.TeamColor.WHITE);
                     case 'P' -> piecesOnBoard[i/8][i%8] = new Pawn(ChessGame.TeamColor.WHITE);
                     case 'K' -> piecesOnBoard[i/8][i%8] = new King(ChessGame.TeamColor.WHITE);

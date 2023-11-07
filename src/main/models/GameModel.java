@@ -25,6 +25,7 @@ public class GameModel {
      * contains the name of the game as a string
      */
     String gameName;
+    String serializedGameBoard;
     private transient ChessGame game;
 
     public GameModel(String gameName) {
@@ -41,7 +42,9 @@ public class GameModel {
         this.whiteUsername = whiteUsername;
         this.blackUsername = blackUsername;
         this.gameName = gameName;
-        //this.game = gameBoard;
+        this.game = new Game(gameBoard);
+//        this.serializedGameBoard = gameBoard;
+
     }
 
     public int getGameID() {

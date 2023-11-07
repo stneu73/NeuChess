@@ -35,4 +35,7 @@ public interface ChessBoard {
     void resetBoard();
 
     void executeMove(ChessMove move);
+
+    StringBuilder boardToStringBuilder();
+
 }

@@ -15,11 +15,15 @@ public class Game implements ChessGame{
         this.hypotheticalBoard = new Board();
     }
 
-    public Game(char[] gameBoard, TeamColor color) {
-        this.teamTurn = color; //TODO: make sure I can pass in the correct color's turn from the server
+    public Game(String gameBoard) {
+        if (gameBoard.substring(64).equalsIgnoreCase("white")) {
+            this.teamTurn = TeamColor.WHITE;
+        } else {
+            this.teamTurn = TeamColor.BLACK;
+        }
         this.allTeamMoves = new HashSet<>();
         this.board = new Board(gameBoard);
-        this.hypotheticalBoard = new Board();
+        this.hypotheticalBoard = setHypotheticalBoardAsBoard();
     }
     @Override
     public TeamColor getTeamTurn() {
@@ -265,4 +269,9 @@ public class Game implements ChessGame{
         }
         return this.hypotheticalBoard;
     }
+
+    public String gameToString() {
+        return this.board.boardToStringBuilder().append(teamTurn.toString()).toString();
+    }
+
 }
