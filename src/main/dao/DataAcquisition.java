@@ -5,6 +5,8 @@ import models.AuthToken;
 import models.GameModel;
 import models.User;
 
+import java.util.LinkedList;
+
 /**
  * Interface that manages reading and writing to the database
  */
@@ -39,10 +41,11 @@ public interface DataAcquisition {
 
     /**
      * Goes into the database to find all the games that are currently being run or have been finished
+     *
      * @return returns a list of all the games in the database
      * @throws DataAccessException If there is an error in accessing data this is thrown
      */
-    GameModel[] getAllGames(String authToken)throws DataAccessException;
+    LinkedList<GameModel> getAllGames(String authToken)throws DataAccessException;
 
     /**
      * Sets one of the users as one of the teams in the chess team

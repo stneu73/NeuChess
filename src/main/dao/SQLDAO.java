@@ -7,7 +7,7 @@ import models.GameModel;
 import models.User;
 
 import java.sql.SQLException;
-import java.util.Objects;
+import java.util.LinkedList;
 import java.util.UUID;
 
 public class SQLDAO implements DataAcquisition {
@@ -22,7 +22,7 @@ public class SQLDAO implements DataAcquisition {
                 CREATE TABLE IF NOT EXISTS user (
                     id INT NOT NULL AUTO_INCREMENT,
                     username VARCHAR(255) NOT NULL,
-                    password VARCHAR(255) NOT NULL,
+                    pass VARCHAR(255) NOT NULL,
                     email VARCHAR(255) NOT NULL,
                     PRIMARY KEY(id)
                 );""";
@@ -114,7 +114,7 @@ public class SQLDAO implements DataAcquisition {
         boolean flag = false;
         try (var conn = new Database().getConnection()) {
             conn.setCatalog("chess");
-            try (var preparedStatement = conn.prepareStatement("SELECT id FROM games WHERE id =" + gameID + ";")) {
+            try (var preparedStatement = conn.prepareStatement("SELECT id FROM games WHERE id =\"" + gameID + "\";")) {
                 if (preparedStatement.executeQuery().next()) {
                     flag = true;
                 }
@@ -132,27 +132,40 @@ public class SQLDAO implements DataAcquisition {
             try (var preparedStatement = conn.prepareStatement("SELECT id, whiteUsername, blackUsername, gameName, gameBoard FROM games WHERE id =?;")) {
                 preparedStatement.setInt(1,gameID);
                 try (var result = preparedStatement.executeQuery()) {
-                    return new GameModel(result.getInt("id"), result.getString("whiteUsername"),result.getString("blackUsername"),result.getString("gameName"),result.getString("gameBoard"));
+                    if (result.next()) {
+                        int theID = result.getInt("id");
+                        String whteUser = result.getString("whiteUsername");
+                        String blckUser = result.getString("blackUsername");
+                        String gameyName = result.getString("gameName");
+                        String gamey = result.getString("gameBoard");
+                        return new GameModel(theID,whteUser,blckUser,gameyName,gamey);
+                    }
+
                 }
             }
         } catch (SQLException e) {
             throw new DataAccessException("fail");
         }
+        return null;
     }
 
     @Override
-    public GameModel[] getAllGames(String authToken) throws DataAccessException {
-        GameModel[] gameList;
+    public LinkedList<GameModel> getAllGames(String authToken) throws DataAccessException {
+        LinkedList<GameModel> gameList = new LinkedList<>();
         try (var conn = new Database().getConnection()) {
             conn.setCatalog("chess");
             try (var preparedStatement = conn.prepareStatement("SELECT * FROM games;")) {// id, whiteUsername, blackUsername, gameName, gameBoard FROM games WHERE id=?;")) {
                 try (var result = preparedStatement.executeQuery()) {
-                    gameList = new GameModel[result.getFetchSize()];
-                    int i = 0;
-                    while (result.next()) {
-                        gameList[i] = new GameModel(result.getInt("id"), result.getString("whiteUsername"), result.getString("blackUsername"), result.getString("gameName"), result.getString("gameBoard"));
-                        i++;
-                    }
+//                    if (result.next()) {
+                        while (result.next()) {
+                            int theID = result.getInt("id");
+                            String whteUser = result.getString("whiteUsername");
+                            String blckUser = result.getString("blackUsername");
+                            String gameyName = result.getString("gameName");
+                            String gamey = result.getString("gameBoard");
+                            gameList.add(new GameModel(theID,whteUser,blckUser,gameyName,gamey));
+                        }
+//                    }
                 }
             }
         } catch (SQLException e) {
@@ -162,11 +175,26 @@ public class SQLDAO implements DataAcquisition {
     }
 
     @Override
-    public void claimSpot(Integer gameID, String username, String color) throws DataAccessException {
+    public void claimSpot(Integer gameID, String authToken, String color) throws DataAccessException {
+        String username = null;
         try (var conn = new Database().getConnection()) {
             conn.setCatalog("chess");
-            try (var preparedStatement = conn.prepareStatement("SELECT id, "+color.toLowerCase()+"Username FROM games WHERE id =?;")) {
-                preparedStatement.setInt(1,gameID);
+            try (var preparedStatement = conn.prepareStatement("SELECT authToken, username FROM auth WHERE authToken=?;")) {
+                preparedStatement.setString(1,authToken);
+                try (var result = preparedStatement.executeQuery()) {
+                    if (result.next()) {
+                        username = result.getString("username");
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            throw new DataAccessException("fail");
+        }
+        try (var conn = new Database().getConnection()) {
+            conn.setCatalog("chess");
+            try (var preparedStatement = conn.prepareStatement("UPDATE games SET "+ color.toLowerCase() +"Username =? WHERE id=?;")) {
+                preparedStatement.setString(1,username);
+                preparedStatement.setInt(2,gameID);
                 preparedStatement.executeUpdate();
             }
         } catch (SQLException e) {
@@ -193,7 +221,7 @@ public class SQLDAO implements DataAcquisition {
     public User createUser(String username, User user) throws DataAccessException {
         try (var conn = new Database().getConnection()) {
             conn.setCatalog("chess");
-            try (var preparedStatement = conn.prepareStatement("INSERT INTO user (username, password, email) VALUES (?,?,?);")) {
+            try (var preparedStatement = conn.prepareStatement("INSERT INTO user (username, pass, email) VALUES (?,?,?);")) {
                 preparedStatement.setString(1,user.getUsername());
                 preparedStatement.setString(2,user.getPassword());
                 preparedStatement.setString(3,user.getEmail());
@@ -209,33 +237,36 @@ public class SQLDAO implements DataAcquisition {
 
     @Override
     public boolean findUser(String username) throws DataAccessException {
-        boolean flag = false;
         try (var conn = new Database().getConnection()) {
             conn.setCatalog("chess");
-            try (var preparedStatement = conn.prepareStatement("SELECT username FROM user WHERE username=" + username + ";")) {
-                if (Objects.equals(preparedStatement.executeQuery().getString("username"), username)) {
-                    flag = true;
-                }
+            try (var preparedStatement = conn.prepareStatement("SELECT username FROM user WHERE username=\"" + username + "\";")) {
+                return preparedStatement.executeQuery().next();
             }
         } catch (SQLException e) {
             throw new DataAccessException("fail");
         }
-        return flag;
     }
 
     @Override
     public User getUser(String username) throws DataAccessException {
         try (var conn = new Database().getConnection()) {
             conn.setCatalog("chess");
-            try (var preparedStatement = conn.prepareStatement("SELECT username, password, email FROM user WHERE username =?;")) {
+            try (var preparedStatement = conn.prepareStatement("SELECT username, pass, email FROM user WHERE username =?;")) {
                 preparedStatement.setString(1,username);
                 try (var result = preparedStatement.executeQuery()) {
-                    return new User(result.getString("username"),result.getString("password"),result.getString("email"));
+                    if (result.next()) {
+                        String name = result.getString("username");
+                        String pass = result.getString("pass");
+                        String mail = result.getString("email");
+                        return new User(name,pass,mail);
+                    }
+
                 }
             }
         } catch (SQLException e) {
             throw new DataAccessException("fail");
         }
+        return null;
     }
 
     @Override
@@ -305,14 +336,11 @@ public class SQLDAO implements DataAcquisition {
         boolean flag = false;
         try (var conn = new Database().getConnection()) {
             conn.setCatalog("chess");
-            try (var preparedStatement = conn.prepareStatement("SELECT authToken FROM auth WHERE authToken =" + authToken + ";")) {
-                if (Objects.equals(preparedStatement.executeQuery().getString("authToken"), authToken)) {
-                    flag = true;
-                }
+            try (var preparedStatement = conn.prepareStatement("SELECT authToken FROM auth WHERE authToken =\"" + authToken + "\";")) {
+                return preparedStatement.executeQuery().next();
             }
         } catch (SQLException e) {
             throw new DataAccessException("fail");
         }
-        return flag;
     }
 }

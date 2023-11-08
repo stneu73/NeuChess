@@ -2,6 +2,8 @@ package responses;
 
 import models.GameModel;
 
+import java.util.LinkedList;
+
 /**
  * Contains all the information for all the games to be listed out to be given to the client
  */
@@ -9,7 +11,7 @@ public class ListGamesResponse {
     /**
      * contains a list of all the games from the database
      */
-    GameModel[] games;
+    LinkedList<GameModel> games;
     /**
      * contains message to be returned to the user
      */
@@ -19,7 +21,7 @@ public class ListGamesResponse {
      * Constructor for ListGamesResponse
      * @param games list of games passed in by the DAO
      */
-    public ListGamesResponse(GameModel[] games) {
+    public ListGamesResponse(LinkedList<GameModel> games) {
         this.games = games;
         this.message = null;
     }

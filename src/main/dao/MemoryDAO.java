@@ -5,10 +5,7 @@ import models.AuthToken;
 import models.GameModel;
 import models.User;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 
 public class MemoryDAO implements DataAcquisition {
     private static MemoryDAO instance = new MemoryDAO();
@@ -42,11 +39,11 @@ public class MemoryDAO implements DataAcquisition {
     }
 
     @Override
-    public GameModel[] getAllGames(String authToken) throws DataAccessException {
-        GameModel[] gameModelList = new GameModel[gameIDToGameModel.size()];
+    public LinkedList<GameModel> getAllGames(String authToken) throws DataAccessException {
+        LinkedList<GameModel> gameModelList = new LinkedList<GameModel>();
         int i = 0;
         for (var itr :gameIDToGameModel.keySet()) {
-            gameModelList[i] = gameIDToGameModel.get(itr);
+            gameModelList.add(gameIDToGameModel.get(itr));
             i+=1;
         }
         return gameModelList;
