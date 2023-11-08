@@ -13,10 +13,6 @@ import java.util.UUID;
 public class SQLDAO implements DataAcquisition {
     public void configureDatabase() throws DataAccessException {
         try (var conn = new Database().getConnection()) {
-//            var createDbStatement = conn.prepareStatement("CREATE DATABASE IF NOT EXISTS chess");
-//            createDbStatement.executeUpdate();
-
-//            conn.setCatalog("chess");
 
             var createUserTable = """
                 CREATE TABLE IF NOT EXISTS user (
@@ -97,10 +93,9 @@ public class SQLDAO implements DataAcquisition {
                 preparedStatement.setString(2,gameModel.getWhiteUsername());
                 preparedStatement.setString(3,gameModel.getBlackUsername());
                 preparedStatement.setString(4,gameModel.getGameName());
-                preparedStatement.setString(5,gameModel.getGame().gameToString()); //TODO fix this to be a serialized version of the board state
+                preparedStatement.setString(5,gameModel.getGame().gameToString());
 
                 preparedStatement.executeUpdate();
-                //TODO: get the generated keys? what is that really?
             }
 
         } catch (SQLException e) {
@@ -150,22 +145,20 @@ public class SQLDAO implements DataAcquisition {
     }
 
     @Override
-    public LinkedList<GameModel> getAllGames(String authToken) throws DataAccessException {
+    public LinkedList<GameModel> getAllGames() throws DataAccessException {
         LinkedList<GameModel> gameList = new LinkedList<>();
         try (var conn = new Database().getConnection()) {
             conn.setCatalog("chess");
             try (var preparedStatement = conn.prepareStatement("SELECT * FROM games;")) {// id, whiteUsername, blackUsername, gameName, gameBoard FROM games WHERE id=?;")) {
                 try (var result = preparedStatement.executeQuery()) {
-//                    if (result.next()) {
-                        while (result.next()) {
-                            int theID = result.getInt("id");
-                            String whteUser = result.getString("whiteUsername");
-                            String blckUser = result.getString("blackUsername");
-                            String gameyName = result.getString("gameName");
-                            String gamey = result.getString("gameBoard");
-                            gameList.add(new GameModel(theID,whteUser,blckUser,gameyName,gamey));
-                        }
-//                    }
+                    while (result.next()) {
+                        int theID = result.getInt("id");
+                        String whteUser = result.getString("whiteUsername");
+                        String blckUser = result.getString("blackUsername");
+                        String gameyName = result.getString("gameName");
+                        String gamey = result.getString("gameBoard");
+                        gameList.add(new GameModel(theID,whteUser,blckUser,gameyName,gamey));
+                    }
                 }
             }
         } catch (SQLException e) {

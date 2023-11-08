@@ -45,7 +45,7 @@ public interface DataAcquisition {
      * @return returns a list of all the games in the database
      * @throws DataAccessException If there is an error in accessing data this is thrown
      */
-    LinkedList<GameModel> getAllGames(String authToken)throws DataAccessException;
+    LinkedList<GameModel> getAllGames()throws DataAccessException;
 
     /**
      * Sets one of the users as one of the teams in the chess team

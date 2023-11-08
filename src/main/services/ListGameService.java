@@ -23,7 +23,7 @@ public class ListGameService {
             return new ListGamesResponse("Error: Couldn't Access Database");
         }
         try {
-            return new ListGamesResponse(dao.getAllGames(authToken));//MemoryDAO.getInstance().getAllGames(authToken));
+            return new ListGamesResponse(dao.getAllGames());//MemoryDAO.getInstance().getAllGames(authToken));
         } catch (DataAccessException e) {
             return new ListGamesResponse("Error: Couldn't Access Database");
         }
