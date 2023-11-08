@@ -3,7 +3,6 @@ package services;
 import dao.MemoryDAO;
 import dao.SQLDAO;
 import dataAccess.DataAccessException;
-import org.eclipse.jetty.util.log.Log;
 import responses.LogoutResponse;
 
 /**

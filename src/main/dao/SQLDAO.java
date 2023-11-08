@@ -333,7 +333,6 @@ public class SQLDAO implements DataAcquisition {
 
     @Override
     public boolean findAuthToken(String authToken) throws DataAccessException {
-        boolean flag = false;
         try (var conn = new Database().getConnection()) {
             conn.setCatalog("chess");
             try (var preparedStatement = conn.prepareStatement("SELECT authToken FROM auth WHERE authToken =\"" + authToken + "\";")) {

@@ -6,8 +6,6 @@ import dataAccess.DataAccessException;
 import models.GameModel;
 import responses.CreateGameResponse;
 
-import javax.xml.crypto.Data;
-
 /**
  * Service to create a new chess game in the database
  */

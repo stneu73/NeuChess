@@ -41,10 +41,8 @@ public class MemoryDAO implements DataAcquisition {
     @Override
     public LinkedList<GameModel> getAllGames(String authToken) throws DataAccessException {
         LinkedList<GameModel> gameModelList = new LinkedList<GameModel>();
-        int i = 0;
         for (var itr :gameIDToGameModel.keySet()) {
             gameModelList.add(gameIDToGameModel.get(itr));
-            i+=1;
         }
         return gameModelList;
     }
