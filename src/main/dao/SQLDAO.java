@@ -93,7 +93,7 @@ public class SQLDAO implements DataAcquisition {
                 preparedStatement.setString(2,gameModel.getWhiteUsername());
                 preparedStatement.setString(3,gameModel.getBlackUsername());
                 preparedStatement.setString(4,gameModel.getGameName());
-                preparedStatement.setString(5,gameModel.getGame().gameToString());
+                preparedStatement.setString(5,gameModel.getGameToString());
 
                 preparedStatement.executeUpdate();
             }

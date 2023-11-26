@@ -65,5 +65,6 @@ public class GameModel {
     public ChessGame getGame() {
         return this.game;
     }
+    public String getGameToString() {return this.game.gameToString();}
 
 }
