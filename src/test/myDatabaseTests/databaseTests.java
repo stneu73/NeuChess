@@ -5,9 +5,7 @@ import dataAccess.Database;
 import org.junit.jupiter.api.*;
 import dao.SQLDAO;
 import models.*;
-import spark.utils.Assert;
 
-import javax.xml.crypto.Data;
 import java.sql.SQLException;
 
 public class databaseTests {

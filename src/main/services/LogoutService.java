@@ -1,6 +1,5 @@
 package services;
 
-import dao.MemoryDAO;
 import dao.SQLDAO;
 import dataAccess.DataAccessException;
 import responses.LogoutResponse;
