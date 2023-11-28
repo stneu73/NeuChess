@@ -16,6 +16,7 @@ public class ListGamesResponse {
      * contains message to be returned to the user
      */
     String message;
+    String gamesPrint;
 
     /**
      * Constructor for ListGamesResponse
@@ -24,6 +25,8 @@ public class ListGamesResponse {
     public ListGamesResponse(LinkedList<GameModel> games) {
         this.games = games;
         this.message = null;
+        this.gamesPrint = gamesToString();
+
     }
     /**
      * Constructor for ListGamesResponse
@@ -36,5 +39,13 @@ public class ListGamesResponse {
 
     public String getMessage() {
         return message;
+    }
+
+    private String gamesToString() {
+        StringBuilder s = new StringBuilder();
+        for (int i = 0; i < games.size(); i++) {
+            s.append(i+1).append(". ").append(games.get(i).gameToStringPrint()).append("\n");
+        }
+        return s.toString();
     }
 }

@@ -66,5 +66,22 @@ public class GameModel {
         return this.game;
     }
     public String getGameToString() {return this.game.gameToString();}
-
+    public String gameToStringPrint() {
+        StringBuilder s = new StringBuilder();
+        s.append("Game ID: ").append(gameID).append("\n");
+        s.append("   ").append("Game Name: ").append(gameName).append("\n");
+        s.append("   ").append("White Player: ");
+        if (getWhiteUsername() == null) {
+            s.append("none").append("\n");
+        } else {
+            s.append(whiteUsername).append("\n");
+        }
+        s.append("   Black Player: ");
+        if (getBlackUsername() == null) {
+            s.append("none").append("\n");
+        } else {
+            s.append(blackUsername).append("\n");
+        }
+        return s.toString();
+    }
 }

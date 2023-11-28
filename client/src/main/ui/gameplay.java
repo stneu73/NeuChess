@@ -9,7 +9,6 @@ import static ui.EscapeSequences.*;
 public class gameplay {
     private static final int BOARD_SIZE_IN_SQUARES = 8;
     private static final int SQUARE_SIZE_IN_CHARS = 1;
-    private static final int LINE_WIDTH_IN_CHARS = 0;
 
     public static void playChess() {
         String boardStart = "rnbqkbnrppppppppeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeePPPPPPPPRNBQKBNR";
@@ -29,6 +28,7 @@ public class gameplay {
         drawHeaders(out, headers);
         printChessBoard(out,reversedBoardState,rowNums);
         drawHeaders(out, headers);
+        out.print("\u001b[38;49;0m");
     }
 
     private static void drawHeaders(PrintStream out, String[] headers) {

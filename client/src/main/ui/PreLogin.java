@@ -2,7 +2,8 @@ package ui;
 
 import java.util.Scanner;
 
-public class prelogin {
+public class PreLogin {
+    private static String authToken;
     public static void main(String[] args) {
         boolean flag = true;
         System.out.print("This is Neu Chess. Type \"Help\" to get started.");
@@ -18,10 +19,9 @@ public class prelogin {
                 System.out.println();
             } else if (input.equalsIgnoreCase("login")) {
                 login();
-                postLogout();
             } else if (input.equalsIgnoreCase("register")) {
                 register();
-                postLogout();
+
             } else {
                 System.out.print("Type \"Help\" to get started.");
                 System.out.println();
@@ -51,11 +51,21 @@ public class prelogin {
         String password = scanner.nextLine();
         System.out.println();
 
-        //TODO: make api call to server for login
+        try {
+            authToken = ServerFacade.login(username, password);
+            System.out.print("Welcome " + username +"! Type \"Help\" to see available endpoints.");
+            System.out.println();
+            PostLogin.start(authToken);
+            postLogout();
+        } catch (Exception e) {
+            String message = e.getMessage();
+            System.out.print("Login failure. " + message);
+            System.out.println();
+            System.out.print("Type \"Help\" for options");
+            System.out.println();
+        }
 
-        System.out.print("Welcome " + username +"! Type \"Help\" to see available endpoints.");
-        System.out.println();
-        postlogin.start();
+
     }
 
     private static void register() { //needs a username, password, and email
@@ -70,11 +80,19 @@ public class prelogin {
         String email = scanner.nextLine();
         System.out.println();
 
-        //TODO: make call to server to input into system and receive auth token
-
-        System.out.print("Welcome " + username +"! Type \"Help\" to see available endpoints.");
-        System.out.println();
-        postlogin.start();
+        try {
+            authToken = ServerFacade.register(username, password, email);
+            System.out.print("Welcome " + username +"! Type \"Help\" to see available endpoints. ");
+            System.out.println();
+            PostLogin.start(authToken);
+            postLogout();
+        } catch (Exception e) {
+            String message = e.getMessage();
+            System.out.print("Register failure. " + message);
+            System.out.println();
+            System.out.print("Type \"Help\" for options");
+            System.out.println();
+        }
     }
 
     private static void postLogout() {
