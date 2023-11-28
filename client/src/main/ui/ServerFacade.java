@@ -8,6 +8,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URI;
+import java.util.LinkedList;
 import java.util.Map;
 //import exception.ResponseException;
 
@@ -15,9 +16,10 @@ public class ServerFacade {
 
     private static final String USER_URL = "/user";
     private static final String GAME_URL = "/game";
-    private static final String DATABASE_URL = "/db";
     private static final String SESSION_URL = "/session";
     private static final String SERVER_URL = "http://localhost:8080";
+
+    public static int[] gameIDs;
 
     public static String login(String username, String password) throws Exception {
         URI uri = new URI(SERVER_URL + SESSION_URL);
@@ -144,6 +146,8 @@ public class ServerFacade {
             try (InputStream respBody = http.getInputStream()) {
                 InputStreamReader reader = new InputStreamReader(respBody);
                 var json = new Gson().fromJson(reader, Map.class);
+
+                gameIDs = (int[]) json.get("gameIDs");
                 return (String) json.get("gamesPrint");
 
             } catch (IOException e) {

@@ -15,8 +15,9 @@ public class ListGamesResponse {
     /**
      * contains message to be returned to the user
      */
-    String message;
-    String gamesPrint;
+    private String message;
+    private String gamesPrint;
+    private int[] gameIDs;
 
     /**
      * Constructor for ListGamesResponse
@@ -26,7 +27,7 @@ public class ListGamesResponse {
         this.games = games;
         this.message = null;
         this.gamesPrint = gamesToString();
-
+        this.gameIDs = setGameIDs();
     }
     /**
      * Constructor for ListGamesResponse
@@ -47,5 +48,16 @@ public class ListGamesResponse {
             s.append(i+1).append(". ").append(games.get(i).gameToStringPrint()).append("\n");
         }
         return s.toString();
+    }
+
+    private int[] setGameIDs() {
+        int[] temp = new int[games.size()];
+        int i = 0;
+        for (var game:games) {
+
+            temp[i] = game.getGameID();
+            i++;
+        }
+        return temp;
     }
 }
