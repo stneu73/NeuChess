@@ -97,8 +97,7 @@ public class PostLogin {
         System.out.println();
 
         try {
-            String gamesPrint = ServerFacade.listGames(authToken);
-            System.out.print(gamesPrint);
+            ServerFacade.listGames(authToken);
         } catch (Exception e) {
             System.out.print("List Games Error: " + e.getMessage());
         }

@@ -1,6 +1,7 @@
 package ui;
 
 import com.google.gson.Gson;
+import models.GameModel;
 import responses.ListGamesResponse;
 
 import java.io.IOException;
@@ -8,8 +9,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URI;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
-//import exception.ResponseException;
 
 public class ServerFacade {
 
@@ -18,7 +20,8 @@ public class ServerFacade {
     private static final String SESSION_URL = "/session";
     private static final String SERVER_URL = "http://localhost:8080";
 
-    public static int[] gameIDs;
+    public static HashMap<Integer, GameModel> games = new HashMap<>();
+    public static HashSet<Integer> gameIDs = new HashSet<>();
 
     public static String login(String username, String password) throws Exception {
         URI uri = new URI(SERVER_URL + SESSION_URL);
@@ -131,7 +134,7 @@ public class ServerFacade {
         }
     }
 
-    public static String listGames(String authToken) throws Exception {
+    public static void listGames(String authToken) throws Exception {
         URI uri = new URI(SERVER_URL+GAME_URL);
         HttpURLConnection http = (HttpURLConnection) uri.toURL().openConnection();
         http.setRequestMethod("GET");
@@ -142,14 +145,45 @@ public class ServerFacade {
 
         int responseCode = http.getResponseCode();
         if (isSuccessful(responseCode)) {
+            games.clear();
             try (InputStream respBody = http.getInputStream()) {
                 InputStreamReader reader = new InputStreamReader(respBody);
                 ListGamesResponse json = new Gson().fromJson(reader, ListGamesResponse.class);
-                gameIDs = json.getGameIDs();
-                if (gameIDs.length == 0) {
-                    return "\nNo Games\n\n";
+                for (var game : json.getGames()) {
+                    games.put(game.getGameID(),game);
+                    gameIDs.add(game.getGameID());
+                }
+                if (games.isEmpty()) {
+                    System.out.print("\nNo Games\n\n");
+                    gameIDs.clear();
                 } else {
-                    return json.gamesToString();
+                    int i = 0;
+                    StringBuilder s = new StringBuilder();
+                    for (var gameID : gameIDs) {
+                        i++;
+                        GameModel game = games.get(gameID);
+//                        System.out.print(i+". Game Name: " + game.getGameName() + "\n   Game ID: " + gameID +
+//                                "\n   White Player: " + game.getWhiteUsername() + "\n   Black Player: " +
+//                                game.getBlackUsername() + "\n\n");
+
+                        s.append(i).append(". Game Name: ").append(game.getGameName()).append("\n");
+                        s.append("   Game ID: ").append(gameID).append("\n");
+                        s.append("   ").append("White Player: ");
+                        if (game.getWhiteUsername() == null) {
+                            s.append("\n");
+                        } else {
+                            s.append(game.getWhiteUsername()).append("\n");
+                        }
+                        s.append("   Black Player: ");
+                        if (game.getBlackUsername() == null) {
+                            s.append("\n\n");
+                        } else {
+                            s.append(game.getBlackUsername()).append("\n\n");
+                        }
+
+                    }
+                    System.out.print(s);
+
                 }
             } catch (IOException e) {
                 throw new Exception();
