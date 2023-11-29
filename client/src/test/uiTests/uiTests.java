@@ -121,6 +121,7 @@ public class uiTests {
     @Test
     public void joinGamePositive() {
         try {
+
             int gameID = ServerFacade.gameIDs[0];
             ServerFacade.joinGame(gameID,authToken,"white");
         } catch(Exception ignored) {}

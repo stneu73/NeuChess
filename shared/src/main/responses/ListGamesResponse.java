@@ -42,7 +42,7 @@ public class ListGamesResponse {
         return message;
     }
 
-    private String gamesToString() {
+    public String gamesToString() {
         StringBuilder s = new StringBuilder();
         for (int i = 0; i < games.size(); i++) {
             s.append(i+1).append(". ").append(games.get(i).gameToStringPrint()).append("\n");
@@ -59,5 +59,9 @@ public class ListGamesResponse {
             i++;
         }
         return temp;
+    }
+
+    public int[] getGameIDs() {
+        return gameIDs;
     }
 }

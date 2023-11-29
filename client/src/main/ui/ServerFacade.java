@@ -1,14 +1,13 @@
 package ui;
 
 import com.google.gson.Gson;
-import com.google.gson.internal.LinkedTreeMap;
+import responses.ListGamesResponse;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URI;
-import java.util.LinkedList;
 import java.util.Map;
 //import exception.ResponseException;
 
@@ -145,11 +144,13 @@ public class ServerFacade {
         if (isSuccessful(responseCode)) {
             try (InputStream respBody = http.getInputStream()) {
                 InputStreamReader reader = new InputStreamReader(respBody);
-                var json = new Gson().fromJson(reader, Map.class);
-
-                gameIDs = (int[]) json.get("gameIDs");
-                return (String) json.get("gamesPrint");
-
+                ListGamesResponse json = new Gson().fromJson(reader, ListGamesResponse.class);
+                gameIDs = json.getGameIDs();
+                if (gameIDs.length == 0) {
+                    return "\nNo Games\n\n";
+                } else {
+                    return json.gamesToString();
+                }
             } catch (IOException e) {
                 throw new Exception();
             }

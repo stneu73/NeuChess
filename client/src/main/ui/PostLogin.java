@@ -2,6 +2,9 @@ package ui;
 
 import java.util.Locale;
 import java.util.Scanner;
+import java.util.regex.MatchResult;
+import java.util.regex.Pattern;
+import java.util.stream.Stream;
 
 public class PostLogin {
 
@@ -92,10 +95,12 @@ public class PostLogin {
     private static void listGames(String authToken) {
         System.out.print("You've selected List Games");
         System.out.println();
+
         try {
-            System.out.print(ServerFacade.listGames(authToken));
+            String gamesPrint = ServerFacade.listGames(authToken);
+            System.out.print(gamesPrint);
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            System.out.print("List Games Error: " + e.getMessage());
         }
     }
 
