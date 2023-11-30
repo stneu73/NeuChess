@@ -123,7 +123,7 @@ public class PostLogin {
 
         try {
             ServerFacade.joinGame(Integer.parseInt(gameID),authToken,color);
-            gameplay.playChess();
+            gameplay.start();
         } catch (Exception e) {
             System.out.print("Join Game Failure. " + e.getMessage());
             System.out.println();
@@ -139,7 +139,7 @@ public class PostLogin {
         String gameID = new Scanner(System.in).nextLine();
         try {
             ServerFacade.joinGame(Integer.parseInt(gameID),authToken,null);
-            gameplay.playChess();
+            gameplay.start();
         } catch (Exception e) {
             System.out.print("Join Game Failure. " + e.getMessage());
             System.out.println();
