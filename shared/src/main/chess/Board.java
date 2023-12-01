@@ -5,6 +5,7 @@ public class Board implements ChessBoard {
 
     public Board() {
         this.piecesOnBoard = new ChessPiece[8][8];
+        resetBoard();
     }
     public Board(String serializedBoard) {
         stringToBoard(serializedBoard);
@@ -104,10 +105,10 @@ public class Board implements ChessBoard {
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
                 char c = 0;
-                if (getPiecesOnBoard()[i][j] == null) {
+                if (getPiecesOnBoard()[j][i] == null) {
                     c = 'e';
-                } else if (getPiecesOnBoard()[i][j].getTeamColor() == ChessGame.TeamColor.WHITE)
-                switch(getPiecesOnBoard()[i][j].getPieceType()) {
+                } else if (getPiecesOnBoard()[j][i].getTeamColor() == ChessGame.TeamColor.WHITE)
+                switch(getPiecesOnBoard()[j][i].getPieceType()) {
                     case ROOK -> c = 'R';
                     case PAWN -> c = 'P';
                     case KING -> c = 'K';
@@ -115,7 +116,7 @@ public class Board implements ChessBoard {
                     case BISHOP -> c = 'B';
                     case KNIGHT -> c = 'N';
                 } else {
-                    switch(getPiecesOnBoard()[i][j].getPieceType()) {
+                    switch(getPiecesOnBoard()[j][i].getPieceType()) {
                         case ROOK -> c = 'r';
                         case PAWN -> c = 'p';
                         case KING -> c = 'k';

@@ -21,6 +21,7 @@ public class PreLogin {
                 login();
             } else if (input.equalsIgnoreCase("register")) {
                 register();
+            } else if (input.equalsIgnoreCase("konami")) {
 
             } else {
                 System.out.print("Type \"Help\" to get started.");
