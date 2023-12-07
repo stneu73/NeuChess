@@ -11,9 +11,12 @@ import requests.RegisterRequest;
 import spark.Request;
 import spark.Response;
 import spark.Spark;
+import webSocket.WebSocketHandler;
 
 public class Server {
-    public static void main(String[] args) { new Server().run(); }
+    public static void main(String[] args) {
+        new Server().run();
+    }
 
     private void run() {
 
@@ -26,6 +29,7 @@ public class Server {
         Spark.port(port);
         Spark.externalStaticFileLocation("C:/Users/Spencer/Documents/Classes/2023 Fall/C S 240/NeuChess/web");
 
+        Spark.webSocket("/connect", new WebSocketHandler());
         Spark.delete("/db",this::clearDatabase);
         Spark.post("/user", this::registerUser);
         Spark.post("/session", this::loginUser);
