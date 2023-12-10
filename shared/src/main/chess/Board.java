@@ -133,23 +133,23 @@ public class Board implements ChessBoard {
 
     public void stringToBoard(String gameBoard) {
         char[] charGameBoard = gameBoard.toCharArray();
-        for (int i = 9; i < 64; i++) {
+        for (int i = 0; i < 64; i++) {
             if (charGameBoard[i] == 'e') {
-                piecesOnBoard[i/8][i%8] = null;
+                piecesOnBoard[i / 8][i % 8] = null;
             } else {
-                switch(charGameBoard[i]) {
-                    case 'R' -> piecesOnBoard[i/8][i%8] = new Rook(ChessGame.TeamColor.WHITE);
-                    case 'P' -> piecesOnBoard[i/8][i%8] = new Pawn(ChessGame.TeamColor.WHITE);
-                    case 'K' -> piecesOnBoard[i/8][i%8] = new King(ChessGame.TeamColor.WHITE);
-                    case 'Q' -> piecesOnBoard[i/8][i%8] = new Queen(ChessGame.TeamColor.WHITE);
-                    case 'B' -> piecesOnBoard[i/8][i%8] = new Bishop(ChessGame.TeamColor.WHITE);
-                    case 'N' -> piecesOnBoard[i/8][i%8] = new Knight(ChessGame.TeamColor.WHITE);
-                    case 'r' -> piecesOnBoard[i/8][i%8] = new Rook(ChessGame.TeamColor.BLACK);
-                    case 'p' -> piecesOnBoard[i/8][i%8] = new Pawn(ChessGame.TeamColor.BLACK);
-                    case 'k' -> piecesOnBoard[i/8][i%8] = new King(ChessGame.TeamColor.BLACK);
-                    case 'q' -> piecesOnBoard[i/8][i%8] = new Queen(ChessGame.TeamColor.BLACK);
-                    case 'b' -> piecesOnBoard[i/8][i%8] = new Bishop(ChessGame.TeamColor.BLACK);
-                    case 'n' -> piecesOnBoard[i/8][i%8] = new Knight(ChessGame.TeamColor.BLACK);
+                switch (charGameBoard[i]) {
+                    case 'R' -> piecesOnBoard[i % 8][i / 8] = new Rook(ChessGame.TeamColor.WHITE);
+                    case 'P' -> piecesOnBoard[i % 8][i / 8] = new Pawn(ChessGame.TeamColor.WHITE);
+                    case 'K' -> piecesOnBoard[i % 8][i / 8] = new King(ChessGame.TeamColor.WHITE);
+                    case 'Q' -> piecesOnBoard[i % 8][i / 8] = new Queen(ChessGame.TeamColor.WHITE);
+                    case 'B' -> piecesOnBoard[i % 8][i / 8] = new Bishop(ChessGame.TeamColor.WHITE);
+                    case 'N' -> piecesOnBoard[i % 8][i / 8] = new Knight(ChessGame.TeamColor.WHITE);
+                    case 'r' -> piecesOnBoard[i % 8][i / 8] = new Rook(ChessGame.TeamColor.BLACK);
+                    case 'p' -> piecesOnBoard[i % 8][i / 8] = new Pawn(ChessGame.TeamColor.BLACK);
+                    case 'k' -> piecesOnBoard[i % 8][i / 8] = new King(ChessGame.TeamColor.BLACK);
+                    case 'q' -> piecesOnBoard[i % 8][i / 8] = new Queen(ChessGame.TeamColor.BLACK);
+                    case 'b' -> piecesOnBoard[i % 8][i / 8] = new Bishop(ChessGame.TeamColor.BLACK);
+                    case 'n' -> piecesOnBoard[i % 8][i / 8] = new Knight(ChessGame.TeamColor.BLACK);
                 }
             }
         }
