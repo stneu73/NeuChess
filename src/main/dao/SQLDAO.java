@@ -6,6 +6,7 @@ import models.AuthToken;
 import models.GameModel;
 import models.User;
 
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.UUID;
@@ -202,7 +203,7 @@ public class SQLDAO implements DataAcquisition {
 
     @Override
     public void updateGame(GameModel gameModel) throws DataAccessException {
-
+        //TODO: IMPLEMENT THIS
     }
 
     @Override
@@ -292,18 +293,25 @@ public class SQLDAO implements DataAcquisition {
 
     @Override
     public AuthToken getAuthToken(String authToken) throws DataAccessException {
-//        try (var conn = new Database().getConnection()) {
-//            conn.setCatalog("chess");
-//            try (var preparedStatement = conn.prepareStatement("SELECT FROM auth WHERE authToken=?")) {
-//                preparedStatement.setString(1,authToken);
-//
-//                preparedStatement.executeQuery();
-//            }
-//
-//        } catch (SQLException e) {
-//            throw new DataAccessException("fail");
-//        }
-        return null;
+        ResultSet temp = null;
+        String authT = null;
+        String username = null;
+        try (var conn = new Database().getConnection()) {
+            conn.setCatalog("chess");
+            try (var preparedStatement = conn.prepareStatement("SELECT authToken, username FROM auth WHERE authToken=?")) {
+                preparedStatement.setString(1,authToken);
+
+                temp = preparedStatement.executeQuery();
+                if (temp.next()) {
+                    authT = temp.getString("authToken");
+                    username = temp.getString("username");
+                }
+            }
+
+        } catch (SQLException e) {
+            throw new DataAccessException("fail in getAuthToken");
+        }
+        return new AuthToken(authT,username);
     }
 
     @Override
