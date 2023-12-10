@@ -53,12 +53,6 @@ public class JoinGameService {
             } catch (DataAccessException e) {
                 return new JoinGameResponse("Error: Couldn't Access Database");
             }
-        } else {
-            try {
-                dao.addWatcher(gameID,authToken);//MemoryDAO.getInstance().addWatcher(gameID,authToken);
-            } catch (DataAccessException e) {
-                return new JoinGameResponse("Error: Couldn't Access Database");
-            }
         }
         return new JoinGameResponse(null);
     }
