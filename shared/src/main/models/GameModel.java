@@ -12,19 +12,20 @@ public class GameModel {
     /**
      * contains the game ID as an int
      */
-    int gameID;
+    private final int gameID;
     /**
      * contains the username of the white player as a string
      */
-    String whiteUsername;
+    private String whiteUsername;
     /**
      * contains the username of the black player as a string
      */
-    String blackUsername;
+    private String blackUsername;
     /**
      * contains the name of the game as a string
      */
-    String gameName;
+    private final String gameName;
+    private final String gameString;
 
     private transient ChessGame game;
 
@@ -35,6 +36,7 @@ public class GameModel {
         this.gameID = rand.nextInt(200000);
         this.whiteUsername = null;
         this.blackUsername = null;
+        this.gameString = null;
     }
 
     public GameModel(int gameID, String whiteUsername, String blackUsername, String gameName, String gameBoard) {
@@ -43,6 +45,7 @@ public class GameModel {
         this.blackUsername = blackUsername;
         this.gameName = gameName;
         this.game = new Game(gameBoard);
+        this.gameString = gameBoard;
 
     }
 
@@ -66,4 +69,7 @@ public class GameModel {
         return this.game;
     }
     public String getGameToString() {return this.game.gameToString();}
+    public String getGameString() {
+        return this.gameString;
+    }
 }
