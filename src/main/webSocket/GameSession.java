@@ -6,7 +6,7 @@ import org.eclipse.jetty.websocket.api.Session;
 public class GameSession {
     private boolean gameIsOver = false;
 
-    private HashSet<Connection> connections;
+    private HashSet<Connection> connections = new HashSet<>();
 
     public GameSession() {
 

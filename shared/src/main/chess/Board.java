@@ -5,7 +5,7 @@ public class Board implements ChessBoard {
 
     public Board() {
         this.piecesOnBoard = new ChessPiece[8][8];
-        resetBoard();
+//        resetBoard();
     }
     public Board(String serializedBoard) {
         stringToBoard(serializedBoard);

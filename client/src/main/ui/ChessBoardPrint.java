@@ -13,35 +13,37 @@ import java.util.LinkedHashSet;
 
 import static ui.EscapeSequences.*;
 
-public class chessBoardPrint {
+public class ChessBoardPrint {
 
     private static final int BOARD_SIZE_IN_SQUARES = 8;
     private static final int SQUARE_SIZE_IN_CHARS = 1;
     private static final String[] headersWhite = new String[]{" a ", " b ", " c ", " d ", " e ", " f ", " g ", " h "};
-    private static final String[] rowNumsWhite = new String[]{" 1 ", " 2 ", " 3 ", " 4 ", " 5 ", " 6 ", " 7 ", " 8 "};
-    private static final String[] rowNumsBlack = new String[]{" 8 ", " 7 ", " 6 ", " 5 ", " 4 ", " 3 ", " 2 ", " 1 "};
+    private static final String[] rowNumsWhite = new String[]{" 8 ", " 7 ", " 6 ", " 5 ", " 4 ", " 3 ", " 2 ", " 1 "};
+    private static final String[] rowNumsBlack = new String[]{" 1 ", " 2 ", " 3 ", " 4 ", " 5 ", " 6 ", " 7 ", " 8 "};
     private static final String[] headersBlack = new String[]{" h ", " g ", " f ", " e ", " d ", " c ", " b ", " a "};
 
 
     public static void playChess(String color, String chessBoard) {
-        chessBoard = chessBoard.substring(0,64);
-        String boardStart = "rnbqkbnrppppppppeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeePPPPPPPPRNBQKBNRwhite";
+        if (color == null) {
+            color = "obs";
+        }
+//        String boardStart = "rnbqkbnrppppppppeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeePPPPPPPPRNBQKBNRwhite";
         var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
         out.print(ERASE_SCREEN);
-        drawAll(color, out,chessBoard);
+        drawAll(color, out,chessBoard.substring(0,64));
 
         out.print("\u001b[38;49;0m");
     }
 
     private static void drawAll(String color, PrintStream out, String chessBoard) {
         if (color.equalsIgnoreCase("black")) {
-            chessBoard = reverseBoard(chessBoard);
+
             drawHeaders(out, headersBlack);
             drawBoard(out, chessBoard, rowNumsBlack);
             drawHeaders(out, headersBlack);
 
         } else {
-
+            chessBoard = reverseBoard(chessBoard);
             drawHeaders(out, headersWhite);
             drawBoard(out, chessBoard, rowNumsWhite);
             drawHeaders(out, headersWhite);
@@ -49,21 +51,19 @@ public class chessBoardPrint {
         out.print("\u001b[38;49;0m");
     }
 
-    public static void highlightBoard(String color, String position, GameModel gameModel) {
-//        String color = "black";
-//        GameModel gameModel = new GameModel("test");
-//        String position = "b1";
-        int xPos = position.charAt(0) -'a'; //index of 0
-        int yPos = Integer.parseInt(position.substring(1))-1; //index of 0
-        Position pos = new Position(xPos,yPos,true);
-        if (!posIsNull(pos,gameModel.getGame())) {
-            LinkedHashSet<Position> positionsToHighlight = getPositionsToHighlight(pos, gameModel.getGame());
-            String chessBoard = gameModel.getGame().gameToString().substring(0,64);
-            drawAllHighlights(color,chessBoard,positionsToHighlight,pos);
-
+    public static void highlightBoard(String color, Position pos, String gameBoardAsString) {
+        var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
+        if (color == null) {
+            color = "obs";
+        }
+        if (!posIsNull(pos,gameBoardAsString)) {
+            LinkedHashSet<Position> positionsToHighlight = getPositionsToHighlight(pos, gameBoardAsString);
+            drawAllHighlights(color,gameBoardAsString.substring(0,64),positionsToHighlight,pos);
+            out.print("\u001b[38;49;0m");
         } else {
-            System.out.print("The chosen position has no piece in it.\nNothing was highlighted.\n\n");
-            playChess(color,gameModel.getGame().gameToString());
+            out.print("\u001b[38;49;0m");
+            out.print("The chosen position has no piece in it.\nNothing was highlighted.\n\n");
+            playChess(color,gameBoardAsString);
         }
 
     }
@@ -72,12 +72,13 @@ public class chessBoardPrint {
         var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
         out.print(ERASE_SCREEN);
         if (color.equalsIgnoreCase("black")) {
-            chessBoard = reverseBoard(chessBoard);
+
             drawHeaders(out, headersBlack);
             drawBoard(out, chessBoard, rowNumsBlack,positionsToHighlight,pos);
             drawHeaders(out, headersBlack);
 
         } else {
+            chessBoard = reverseBoard(chessBoard);
             drawHeaders(out, headersWhite);
             drawBoard(out, chessBoard, rowNumsWhite,positionsToHighlight,pos);
             drawHeaders(out, headersWhite);
@@ -145,7 +146,8 @@ public class chessBoardPrint {
         }
     }
 
-    private static LinkedHashSet<Position> getPositionsToHighlight(Position originPos,ChessGame game) {
+    private static LinkedHashSet<Position> getPositionsToHighlight(Position originPos,String gameBoard) {
+        Game game = new Game(gameBoard);
 //            if (!Objects.equals(game.getGame().getBoard().getPiece(pos).getTeamColor().toString(), color)) {} //use if team color is important
             Collection<ChessMove> validMoves = game.validMoves(originPos);
             LinkedHashSet<Position> retVal = new LinkedHashSet<>();
@@ -155,8 +157,8 @@ public class chessBoardPrint {
         return retVal;
     }
 
-    private static boolean posIsNull(Position pos, ChessGame game) {
-        return game.getBoard().getPiece(pos) == null;
+    private static boolean posIsNull(Position pos, String game) {
+        return new Game(game).getBoard().getPiece(pos) == null;
     }
 
     private static void drawHeaders(PrintStream out, String[] headers) {

@@ -33,7 +33,7 @@ public class JoinGameService {
         }
         GameModel game;
         try {
-            game = dao.getGame(gameID);//MemoryDAO.getInstance().getGame(gameID);
+            game = dao.getGame(gameID);
         } catch (DataAccessException e) {
             return new JoinGameResponse("Error: Couldn't Access Database");
         }
@@ -49,7 +49,7 @@ public class JoinGameService {
                 }
             }
             try {
-                dao.claimSpot(gameID, authToken, color);//MemoryDAO.getInstance().claimSpot(gameID, authToken, color);
+                dao.claimSpot(gameID, authToken, color);
             } catch (DataAccessException e) {
                 return new JoinGameResponse("Error: Couldn't Access Database");
             }

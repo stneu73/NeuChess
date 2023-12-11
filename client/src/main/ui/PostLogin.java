@@ -1,10 +1,6 @@
 package ui;
 
-import java.util.Locale;
 import java.util.Scanner;
-import java.util.regex.MatchResult;
-import java.util.regex.Pattern;
-import java.util.stream.Stream;
 
 public class PostLogin {
 
@@ -104,16 +100,13 @@ public class PostLogin {
     }
 
     private static void joinGame(String authToken) {
+        listGames(authToken);
         Scanner s = new Scanner(System.in);
         System.out.print("You've selected Join Game");
         System.out.println();
         System.out.print("Please enter the GameID of the game you would like to join");
         System.out.println();
-        String gameID = s.nextLine();
-        System.out.print("Please enter the color you would like to play as (white or black).");
-        System.out.println();
-//        System.out.print("Leave empty and hit enter to just observe");
-//        System.out.println();
+        int gameID = s.nextInt();
         String color = s.nextLine();
         while (!color.equalsIgnoreCase("white") && !color.equalsIgnoreCase("black")) {
             System.out.print("Please enter the color you would like to play as (white or black).");
@@ -122,8 +115,8 @@ public class PostLogin {
         }
 
         try {
-            ServerFacade.joinGame(Integer.parseInt(gameID),authToken,color);
-            gameplay.start();
+            ServerFacade.joinGame(gameID,authToken,color);
+            new Gameplay(gameID,authToken,color);
         } catch (Exception e) {
             System.out.print("Join Game Failure. " + e.getMessage());
             System.out.println();
@@ -136,10 +129,10 @@ public class PostLogin {
         System.out.println();
         System.out.print("Please enter the GameID of the game you would like to join");
         System.out.println();
-        String gameID = new Scanner(System.in).nextLine();
+        int gameID = new Scanner(System.in).nextInt();
         try {
-            ServerFacade.joinGame(Integer.parseInt(gameID),authToken,null);
-            gameplay.start();
+            ServerFacade.joinGame(gameID,authToken,null);
+            new Gameplay(gameID,authToken,null);
         } catch (Exception e) {
             System.out.print("Join Game Failure. " + e.getMessage());
             System.out.println();
