@@ -14,6 +14,12 @@ public class Game implements ChessGame{
         this.board = new Board();
         this.hypotheticalBoard = new Board();
     }
+    public Game (boolean test){
+        this.teamTurn = TeamColor.WHITE;
+        this.allTeamMoves = new HashSet<>();
+        this.board = new Board(test);
+        this.hypotheticalBoard = new Board(test);
+    }
 
     public Game(String gameBoard) {
         if (gameBoard.substring(64).equalsIgnoreCase("white")) {

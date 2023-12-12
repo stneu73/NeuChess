@@ -5,7 +5,11 @@ public class Board implements ChessBoard {
 
     public Board() {
         this.piecesOnBoard = new ChessPiece[8][8];
-//        resetBoard();
+    }
+
+    public Board(boolean test) {
+        this.piecesOnBoard = new ChessPiece[8][8];
+        resetBoard();
     }
     public Board(String serializedBoard) {
         stringToBoard(serializedBoard);
@@ -135,7 +139,7 @@ public class Board implements ChessBoard {
         char[] charGameBoard = gameBoard.toCharArray();
         for (int i = 0; i < 64; i++) {
             if (charGameBoard[i] == 'e') {
-                piecesOnBoard[i / 8][i % 8] = null;
+                piecesOnBoard[i % 8][i / 8] = null;
             } else {
                 switch (charGameBoard[i]) {
                     case 'R' -> piecesOnBoard[i % 8][i / 8] = new Rook(ChessGame.TeamColor.WHITE);
