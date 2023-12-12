@@ -31,12 +31,12 @@ public class GameModel {
 
     public GameModel(String gameName) {
         this.gameName = gameName;
-        this.game = new Game();
+        this.game = new Game(false);
         Random rand = new Random();
         this.gameID = rand.nextInt(200000);
         this.whiteUsername = null;
         this.blackUsername = null;
-        this.gameString = null;
+        this.gameString = game.gameToString();
     }
 
     public GameModel(int gameID, String whiteUsername, String blackUsername, String gameName, String gameBoard) {

@@ -7,6 +7,7 @@ import dataAccess.DataAccessException;
 import models.AuthToken;
 import models.GameModel;
 
+import org.eclipse.jetty.websocket.api.RemoteEndpoint;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
@@ -28,6 +29,7 @@ public class WebSocketHandler {
     @OnWebSocketMessage
     public void onMessage(Session session, String message) throws Exception {
         UserGameCommand userCommand = new Gson().fromJson(message, UserGameCommand.class);
+//        connections.gameIDToGameSession.clear();
         switch (userCommand.getCommandType()) {
             case JOIN_PLAYER -> joinPlayer(session, new Gson().fromJson(message, JoinGameCommand.class));
             case JOIN_OBSERVER -> joinObserver(session, new Gson().fromJson(message, JoinObserverCommand.class));
@@ -72,7 +74,7 @@ public class WebSocketHandler {
                 GameModel game;
                 game = dao.getGame(gameID);
                 if (command.getPlayerColor() == ChessGame.TeamColor.BLACK && game.getBlackUsername() == null) {
-                    seshRemote.sendString(new Gson().toJson(new ErrorMessage("This game has already ended.")));
+                    seshRemote.sendString(new Gson().toJson(new ErrorMessage("Not your game.")));
 
                 } else if (command.getPlayerColor() == ChessGame.TeamColor.WHITE && game.getWhiteUsername() == null) {
                     seshRemote.sendString(new Gson().toJson(new ErrorMessage("Not your game.")));
@@ -136,13 +138,50 @@ public class WebSocketHandler {
         SQLDAO dao = new SQLDAO();
         GameModel gameModel = dao.getGame(gameID);
         AuthToken auth = dao.getAuthToken(command.getAuthString());
-        if (!Objects.equals(auth.getAuthToken(), gameModel.getWhiteUsername()) ||
-                !Objects.equals(auth.getAuthToken(), gameModel.getBlackUsername())) {
-            seshRemote.sendString(new Gson().toJson(new ErrorMessage("You are not a player in this game.")));
-        } else {
+        if (connections.getGameIDToGameSession().get(gameID) == null) {
+            seshRemote.sendString(new Gson().toJson(new ErrorMessage("Game doesn't exist.")));
+        } else if (Objects.equals(auth.getUsername(), gameModel.getWhiteUsername()) ||
+                Objects.equals(auth.getUsername(), gameModel.getBlackUsername())) {
             if (connections.gameOverQuery(gameID)) {
                 seshRemote.sendString(new Gson().toJson(new ErrorMessage("This game has already ended.")));
+            } else if (!connections.gameOverQuery(gameID)) {
+                if (gameModel.getGame().getBoard().getPiece(command.getMove().getStartPosition()) != null) {
+
+                    ChessGame.TeamColor pieceColor = gameModel.getGame().getBoard().getPiece(command.getMove().getStartPosition()).getTeamColor();
+
+                    if (Objects.equals(auth.getUsername(), gameModel.getWhiteUsername()) && pieceColor == ChessGame.TeamColor.WHITE ||
+                            Objects.equals(auth.getUsername(), gameModel.getBlackUsername()) && pieceColor == ChessGame.TeamColor.BLACK) {
+
+                        if (makeGameMove(gameModel, command.getMove(), auth.getUsername())) {
+                            connections.broadcastMinusOne(gameID, auth.getUsername(), new NotificationMessage(auth.getUsername()+" moved "));
+                            connections.broadcastAll(gameID, new LoadGameMessage(gameModel.getGameString()));
+                        }
+
+
+                        switch(pieceColor) {
+                            case WHITE -> pieceColor = ChessGame.TeamColor.BLACK;
+                            case BLACK -> pieceColor = ChessGame.TeamColor.WHITE;
+                        }
+                        if (gameModel.getGame().isInCheckmate(pieceColor)) {
+                            connections.broadcastAll(gameID, new NotificationMessage("Game has ended with " + pieceColor.toString() + " in checkmate."));
+                            connections.endGame(gameID);
+                            //get out of rest of logic
+                        } else if (gameModel.getGame().isInCheck(pieceColor)) {
+                            connections.broadcastMinusOne(gameID, auth.getUsername(), new NotificationMessage(pieceColor.toString() + "is in check."));
+                        }
+
+
+
+                    } else {
+                        connections.reply(gameID, auth.getUsername(), new ErrorMessage("Piece selected is not on your team"));
+                    }
+                } else {
+                    connections.reply(gameID, auth.getUsername(), new ErrorMessage("Piece selected does not exist"));
+                }
             }
+        } else {
+            seshRemote.sendString(new Gson().toJson(new ErrorMessage("You are not a player in this game.")));
+
         }
 //        connections.add(gameID, auth.getUsername(), session);
 
@@ -150,50 +189,7 @@ public class WebSocketHandler {
 //
 //        }
 
-        if (!connections.gameOverQuery(gameID)) {
-            if (gameModel.getGame().getBoard().getPiece(command.getMove().getStartPosition()) != null) {
 
-                ChessGame.TeamColor pieceColor = gameModel.getGame().getBoard().getPiece(command.getMove().getStartPosition()).getTeamColor();
-
-                if (Objects.equals(auth.getUsername(), gameModel.getWhiteUsername()) && pieceColor == ChessGame.TeamColor.WHITE ||
-                        Objects.equals(auth.getUsername(), gameModel.getBlackUsername()) && pieceColor == ChessGame.TeamColor.BLACK) {
-
-                    makeGameMove(gameModel, command.getMove(), auth.getUsername());
-
-                    switch(pieceColor) {
-                        case WHITE -> pieceColor = ChessGame.TeamColor.BLACK;
-                        case BLACK -> pieceColor = ChessGame.TeamColor.WHITE;
-                        }
-                    if (gameModel.getGame().isInCheckmate(pieceColor)) {
-                        try {
-                            connections.broadcastAll(gameID, new NotificationMessage("Game has ended with " + pieceColor.toString() + " in checkmate."));
-                        } catch (Exception e) {
-                            System.out.print(e.getMessage());
-                        }
-                        connections.endGame(gameID);
-                        //get out of rest of logic
-                    }
-                    if (gameModel.getGame().isInCheck(pieceColor)) {
-                        try {
-                            connections.broadcastMinusOne(gameID, auth.getUsername(), new NotificationMessage(pieceColor.toString() + "is in check."));
-                        } catch (Exception e) {
-                            System.out.print(e.getMessage());
-                        }
-                    }
-                    try {
-                        connections.broadcastAll(gameID, new LoadGameMessage(gameModel.getGameString()));
-                    } catch (Exception e) {
-                        System.out.print(e.getMessage());
-                    }
-                } else {
-                    try {
-                        connections.reply(gameID, auth.getUsername(), new ErrorMessage("Piece selected is not on your team"));//reply to user that the move was bad
-                    } catch (Exception e) {
-                        System.out.print(e.getMessage());
-                    }
-                }
-            }
-        }
         //get the game from database
         //validate the piece and mover match color
         //get move info
@@ -204,12 +200,14 @@ public class WebSocketHandler {
             //notification
     }
 
-    private void makeGameMove(GameModel game, Move move, String username) {
+    private boolean makeGameMove(GameModel game, Move move, String username) throws Exception {
+        boolean flag = true;
         if (game.getGame().validMoves(move.getStartPosition()).contains(move)) {
             try {
                 game.getGame().makeMove(move);
             } catch (Exception e) {
-                System.out.print(e.getMessage());
+                connections.reply(game.getGameID(), username, new ErrorMessage(e.getMessage()));
+                flag = false;
             }
             try {
                 new SQLDAO().updateGame(game);
@@ -219,61 +217,46 @@ public class WebSocketHandler {
         } else {
             try {
                 connections.reply(game.getGameID(), username, new ErrorMessage("Selected move is not a valid move."));
+                flag = false;
             } catch (Exception e) {
                 System.out.print(e.getMessage());
             }
         }
+        return flag;
     }
 
-    private void leave(Session session, LeaveCommand command) {
+    private void leave(Session session, LeaveCommand command) throws Exception {
         int gameID = command.getGameID();
-//        GameModel game = null;
-//
-//        try {
-//            game = new SQLDAO().getGame(gameID);
-//        } catch (Exception ignored) {}
+        SQLDAO dao = new SQLDAO();
+        AuthToken auth = dao.getAuthToken(command.getAuthString());
+        RemoteEndpoint seshRemote = session.getRemote();
 
-        if (!connections.gameOverQuery(gameID)) {
-            AuthToken auth = null;
-            try {
-                auth = new SQLDAO().getAuthToken(command.getAuthString());
-            } catch (Exception e) {
-                System.out.print(e.getMessage());
-            }
-            connections.removePlayer(gameID, auth.getUsername(), session);
-            try {
-                connections.broadcastMinusOne(gameID, auth.getUsername(), new NotificationMessage(auth.getUsername() + " has disconnected from the game."));
-            } catch (Exception e) {
-                System.out.print(e.getMessage());
-            }
-        }
+//        if (connections.gameOverQuery(gameID)) {
+//            seshRemote.sendString(new Gson().toJson(new ErrorMessage("Game is already over.")));
+//        }
+
+
+        connections.broadcastMinusOne(gameID, auth.getUsername(), new NotificationMessage(auth.getUsername() + " has disconnected from the game."));
+        connections.removePlayer(gameID, auth.getUsername(), session);
+
     }
 
-    private void resign(Session session, ResignCommand command) {
+    private void resign(Session session, ResignCommand command) throws Exception {
         int gameID = command.getGameID();
-        GameModel game = null;
+        SQLDAO dao = new SQLDAO();
+        GameModel game = dao.getGame(gameID);
+        AuthToken auth = dao.getAuthToken(command.getAuthString());
+        var seshRemote = session.getRemote();
 
-        try {
-            game = new SQLDAO().getGame(gameID);
-        } catch (Exception e) {
-            System.out.print(e.getMessage());
-        }
-
-        if (!connections.gameOverQuery(gameID)) {
-            AuthToken auth = null;
-            try {
-                auth = new SQLDAO().getAuthToken(command.getAuthString());
-            } catch (Exception e) {
-                System.out.print(e.getMessage());
-            }
+        if (connections.gameOverQuery(gameID)) {
+            seshRemote.sendString(new Gson().toJson(new ErrorMessage("Game is already over.")));
+        } else {
 
             if (Objects.equals(auth.getUsername(), game.getWhiteUsername()) || Objects.equals(auth.getUsername(), game.getBlackUsername())) {
                 connections.endGame(gameID);
-                try {
-                    connections.broadcastMinusOne(gameID, auth.getUsername(), new NotificationMessage(auth.getUsername() + " resigned. Game has ended."));
-                } catch (Exception e) {
-                    System.out.print(e.getMessage());
-                }
+                connections.broadcastAll(gameID, new NotificationMessage(auth.getUsername() + " resigned. Game has ended."));
+            } else {
+                seshRemote.sendString(new Gson().toJson(new ErrorMessage("You are not a player.")));
             }
         }
     }

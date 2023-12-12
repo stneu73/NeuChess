@@ -1,9 +1,6 @@
 package ui;
 
-import chess.ChessGame;
-import chess.Game;
-import chess.Move;
-import chess.Position;
+import chess.*;
 import webSocketCommands.*;
 
 import java.util.List;
@@ -32,6 +29,7 @@ public class Gameplay {
 
     public static void start() {
         boolean gameOver = false;
+        boolean isObserver = false;
         if (color != null) {
             try {
                 if (color.equalsIgnoreCase("black")) {
@@ -41,17 +39,39 @@ public class Gameplay {
                 }
             } catch (Exception e) {
                 System.out.print(e.getMessage());
+                gameOver = true;
             }
         } else {
             try {
                 socket.send(new JoinObserverCommand(authToken, gameID));
+                isObserver = true;
             } catch (Exception e) {
                 System.out.print(e.getMessage());
                 gameOver = true;
             }
         }
-
-        if (!gameOver) {
+        if (isObserver) {
+            Scanner s = new Scanner(System.in);
+            System.out.print("You've joined a game.\nType \"Help\" to get started.\n");
+            boolean flag = true;
+            while (flag) {
+                String input = s.nextLine();
+                if (input.equalsIgnoreCase("help")) {
+                    help();
+                } else if (input.equalsIgnoreCase("redraw")) {
+                    redrawChessBoard(gameBoard);
+                } else if (input.equalsIgnoreCase("leave")) {
+                    leaveGame();
+                    flag = false;
+                }
+                else if (input.equalsIgnoreCase("legal moves")) {
+                    highlightMoves();
+                } else {
+                    System.out.print("Type \"Help\" to get started.\n");
+                }
+            }
+        }
+        if (!gameOver && !isObserver) {
             Scanner s = new Scanner(System.in);
             System.out.print("You've joined a game.\nType \"Help\" to get started.\n");
             boolean flag = true;
@@ -104,9 +124,30 @@ public class Gameplay {
         Position start = createPosition();
         System.out.print("\nEnter end position: ");
         Position end = createPosition();
-        try {
-            socket.send(new MakeMoveCommand(authToken,gameID,new Move(start, end)));
-        } catch (Exception ignore) {}
+
+        ChessPiece.PieceType pieceType = null;
+        if (color.equalsIgnoreCase("white") && end.getRowIndex() == 8 && new Game(gameBoard).getBoard().getPiece(start).getPieceType() == ChessPiece.PieceType.PAWN) {
+            System.out.print("what would you like to promote your pawn to?\nQ->Queen\nR->Rook\nB->Bishop\nN->Knight");
+            Scanner input = new Scanner(System.in);
+            String val = input.nextLine();
+            while(!List.of("Q","B","N","R").contains(val)) {
+                System.out.print("Please enter one of the following: Q->Queen\nR->Rook\nB->Bishop\nN->Knight");
+                val = input.nextLine();
+            }
+            switch (val) {
+                case "Q" ->  pieceType = ChessPiece.PieceType.QUEEN;
+                case "N" ->  pieceType = ChessPiece.PieceType.KNIGHT;
+                case "B" ->  pieceType =  ChessPiece.PieceType.BISHOP;
+                case "R" ->  pieceType = ChessPiece.PieceType.ROOK;
+            }
+            try {
+                socket.send(new MakeMoveCommand(authToken, gameID, new Move(start, end, pieceType)));
+            } catch(Exception ignore) {}
+        } else {
+            try {
+                socket.send(new MakeMoveCommand(authToken, gameID, new Move(start, end)));
+            } catch (Exception ignore) {}
+        }
     }
 
 
