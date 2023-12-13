@@ -16,7 +16,7 @@ public class Gameplay {
     private static String color;
     public Gameplay(Integer gameID, String authToken, String color) {
         try {
-            socket = new WSClient();
+            socket = new WSClient(gameID);
         } catch (Exception e) {
             System.out.print(e.getMessage());
 

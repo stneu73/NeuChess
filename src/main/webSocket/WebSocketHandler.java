@@ -165,10 +165,9 @@ public class WebSocketHandler {
                         if (gameModel.getGame().isInCheckmate(pieceColor)) {
                             connections.broadcastAll(gameID, new NotificationMessage("Game has ended with " + pieceColor.toString() + " in checkmate."));
                             connections.endGame(gameID);
-                            //get out of rest of logic
-                        } else if (gameModel.getGame().isInCheck(pieceColor)) {
-                            connections.broadcastMinusOne(gameID, auth.getUsername(), new NotificationMessage(pieceColor.toString() + "is in check."));
-                        }
+                        }// else if (gameModel.getGame().isInCheck(pieceColor)) {
+//                            connections.broadcastMinusOne(gameID, auth.getUsername(), new NotificationMessage(pieceColor.toString() + "is in check."));
+//                        }
 
 
 
@@ -183,21 +182,6 @@ public class WebSocketHandler {
             seshRemote.sendString(new Gson().toJson(new ErrorMessage("You are not a player in this game.")));
 
         }
-//        connections.add(gameID, auth.getUsername(), session);
-
-//        else {
-//
-//        }
-
-
-        //get the game from database
-        //validate the piece and mover match color
-        //get move info
-        //make the move
-            //notifications
-        //update database
-        //check for check or checkmate
-            //notification
     }
 
     private boolean makeGameMove(GameModel game, Move move, String username) throws Exception {
@@ -229,13 +213,6 @@ public class WebSocketHandler {
         int gameID = command.getGameID();
         SQLDAO dao = new SQLDAO();
         AuthToken auth = dao.getAuthToken(command.getAuthString());
-        RemoteEndpoint seshRemote = session.getRemote();
-
-//        if (connections.gameOverQuery(gameID)) {
-//            seshRemote.sendString(new Gson().toJson(new ErrorMessage("Game is already over.")));
-//        }
-
-
         connections.broadcastMinusOne(gameID, auth.getUsername(), new NotificationMessage(auth.getUsername() + " has disconnected from the game."));
         connections.removePlayer(gameID, auth.getUsername(), session);
 
